@@ -11,17 +11,10 @@
         .grid-dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .stat-card { background: var(--secondary); color: white; padding: 10px; border-radius: 8px; text-align: center; }
         input, select, button { width: 100%; padding: 12px; margin: 4px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { cursor: pointer; font-weight: bold; color: white; border: none; transition: 0.3s; }
-        .btn-blue { background: var(--primary); }
-        .btn-gray { background: #7f8c8d; }
-        .btn-green { background: var(--success); height: 50px; }
-        .btn-wa { background: #25D366; }
+        button { cursor: pointer; font-weight: bold; color: white; border: none; }
         .item-row { border-bottom: 1px dashed #ddd; padding-bottom: 8px; margin-bottom: 8px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
-        th { background: #f8f9fa; }
-        @media print { .no-print { display: none !important; } .print-area { display: block !important; } }
-        .print-area { display: none; font-family: monospace; padding: 20px; }
     </style>
 </head>
 <body>
@@ -35,13 +28,13 @@
         <div class="stat-card" style="background:var(--success)">Masuk Bulan Ini<br><b id="d_masuk">0</b></div>
         <div class="stat-card" style="background:var(--danger)">Keluar Bulan Ini<br><b id="d_keluar">0</b></div>
         <div class="stat-card" style="background:#f39c12">Piutang<br><b id="d_piutang">0</b></div>
-        <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Total Keuntungan Bulan Ini: <b id="d_laba">0</b></div>
+        <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Keuntungan Bulan Ini: <b id="d_laba">0</b></div>
     </div>
 
     <!-- FORM PEMESANAN -->
     <div class="container">
         <h3>Input Nota & Pemesanan</h3>
-        <input type="text" id="cs" placeholder="Nama Pelanggan / CS">
+        <input type="text" id="cs" placeholder="Nama Pelanggan">
         <div id="items-container">
             <div class="item-row">
                 <input type="text" class="nn" placeholder="Nama Barang">
@@ -52,21 +45,38 @@
             </div>
         </div>
         <button type="button" onclick="tambahBaris()" style="background:#eee; color:#333; margin: 10px 0;">+ Tambah Item</button>
-        <p>Total Pesanan: <b id="txt_total">Rp 0</b></p>
-        <p>DP Otomatis (50%): <b id="txt_dp">Rp 0</b></p>
+        <p>Total: <b id="txt_total">Rp 0</b> | DP 50%: <b id="txt_dp">Rp 0</b></p>
         <select id="metode"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
-        <button class="btn-blue" onclick="simpanData(false)">SIMPAN</button>
-        <button class="btn-gray" onclick="window.print()">CETAK NOTA</button>
-        <button class="btn-green" onclick="simpanData(true)">SIMPAN DAN CETAK</button>
-        <button class="btn-wa" onclick="kirimWA()">ESTIMASI KE WA</button>
+        <button style="background:var(--primary)" onclick="simpanData(false)">SIMPAN</button>
+        <button style="background:#7f8c8d" onclick="window.print()">CETAK</button>
+        <button style="background:var(--success); height: 50px;" onclick="simpanData(true)">SIMPAN & CETAK</button>
     </div>
 
-    <!-- FITUR CARI (BARU) -->
+    <!-- FORM PENGELUARAN & PERALIHAN -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div class="container" style="border-top: 4px solid var(--danger);">
+            <h4>Pengeluaran</h4>
+            <input type="text" id="ex_n" placeholder="Keperluan">
+            <input type="number" id="ex_h" placeholder="Biaya">
+            <select id="ex_m"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
+            <button style="background:var(--danger)" onclick="simpanPengeluaran()">SIMPAN</button>
+        </div>
+        <div class="container" style="border-top: 4px solid var(--warning);">
+            <h4>Peralihan</h4>
+            <select id="tf_d"><option value="Cash">Dari Cash</option><option value="BNI">Dari BNI</option><option value="BRI">Dari BRI</option></select>
+            <select id="tf_k"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Cash">Ke Cash</option></select>
+            <input type="number" id="tf_j" placeholder="Jumlah">
+            <button style="background:var(--warning); color:black;" onclick="prosesAlih()">PROSES</button>
+        </div>
+    </div>
+
+    <!-- PENCARIAN -->
     <div class="container" style="background: #eef2f7; border-left: 5px solid var(--primary);">
-        <h4>Cari Riwayat (Semua Bulan)</h4>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="cari_input" placeholder="Nama CS atau Nama Barang...">
-            <button onclick="cariRiwayat()" style="width:120px; background:var(--secondary);">CARI</button>
+        <h4>Cari Riwayat Per Bulan</h4>
+        <div style="display:flex; gap:5px;">
+            <select id="cari_bulan"><option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option><option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option><option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option></select>
+            <input type="number" id="cari_tahun" value="2026" style="width:80px;">
+            <button onclick="cariPerBulan()" style="width:100px; background:var(--secondary);">CARI</button>
         </div>
     </div>
 
@@ -77,11 +87,17 @@
             <thead><tr><th>CS</th><th>Barang</th><th>Total</th><th>Bayar</th><th>Sisa</th><th>Metode</th></tr></thead>
             <tbody></tbody>
         </table>
+
+        <h3 style="margin-top:20px;">Riwayat Pengeluaran</h3>
+        <table id="tabel_exp">
+            <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Total</th><th>Metode</th></tr></thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzuO7Cz3UvJ5jDl8xNa1-82aSOEbq-XAaKEFBR5CIvh2BRBiUG9B6bax98XwrrmskMr4A/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbx8Wsh-6WCIFCa4F41HHr42K8uc859Glcn0b7sEszpcB6628MCg6vgwxcLQ7ladxvXF3A/exec';
 
     function tambahBaris() {
         const div = document.createElement('div');
@@ -91,61 +107,45 @@
     }
 
     function hitungTotal() {
-        let grandTotal = 0;
-        document.querySelectorAll('.item-row').forEach(row => {
-            const q = row.querySelector('.nq').value || 0;
-            const h = row.querySelector('.nh').value || 0;
-            grandTotal += (q * h);
-        });
-        document.getElementById('txt_total').innerText = "Rp " + grandTotal.toLocaleString();
-        document.getElementById('txt_dp').innerText = "Rp " + (grandTotal * 0.5).toLocaleString();
-        return grandTotal;
+        let t = 0;
+        document.querySelectorAll('.item-row').forEach(r => t += (r.querySelector('.nq').value * r.querySelector('.nh').value || 0));
+        document.getElementById('txt_total').innerText = "Rp " + t.toLocaleString();
+        document.getElementById('txt_dp').innerText = "Rp " + (t * 0.5).toLocaleString();
+        return t;
     }
 
-    // FUNGSI CARI RIWAYAT (BARU)
-    async function cariRiwayat() {
-        const keyword = document.getElementById('cari_input').value;
-        if(!keyword) return alert("Masukkan kata kunci pencarian!");
-        
-        document.querySelector("#tabel_nota tbody").innerHTML = "<tr><td colspan='6' align='center'>Mencari...</td></tr>";
-        
-        const res = await fetch(webAppUrl + "?action=searchData&key=" + keyword);
+    async function simpanData(p) {
+        const t = hitungTotal();
+        const items = Array.from(document.querySelectorAll('.item-row')).map(r => ({ n: r.querySelector('.nn').value, q: r.querySelector('.nq').value, h: r.querySelector('.nh').value }));
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: document.getElementById('cs').value, total: t, dp: t * 0.5, metode: document.getElementById('metode').value, items: items }) });
+        alert("Nota Berhasil!"); if(p) window.print(); location.reload();
+    }
+
+    async function simpanPengeluaran() {
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", keterangan: document.getElementById('ex_n').value, total: document.getElementById('ex_h').value, metode: document.getElementById('ex_m').value }) });
+        alert("Pengeluaran Dicatat!"); location.reload();
+    }
+
+    async function cariPerBulan() {
+        const res = await fetch(`${webAppUrl}?action=searchByMonth&month=${document.getElementById('cari_bulan').value}&year=${document.getElementById('cari_tahun').value}`);
         const d = await res.json();
-        
-        let htmlNota = "";
-        if(d.length === 0) {
-            htmlNota = "<tr><td colspan='6' align='center'>Data tidak ditemukan</td></tr>";
-        } else {
-            d.forEach(r => {
-                let brg = "";
-                try { const list = JSON.parse(r[2]); brg = list.map(i => `${i.n} (${i.q}x${i.h})`).join("<br>"); } 
-                catch(e) { brg = r[2]; }
-                htmlNota += `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
-            });
-        }
-        document.querySelector("#tabel_nota tbody").innerHTML = htmlNota;
+        renderTabel(d.nota, d.exp);
     }
 
-    async function simpanData(isPrint) {
-        const total = hitungTotal();
-        const items = Array.from(document.querySelectorAll('.item-row')).map(r => ({
-            n: r.querySelector('.nn').value,
-            q: r.querySelector('.nq').value,
-            h: r.querySelector('.nh').value
-        }));
-        
-        const payload = { tipe: "Nota", nama: document.getElementById('cs').value, total: total, dp: total * 0.5, metode: document.getElementById('metode').value, items: items };
+    function renderTabel(nota, exp) {
+        let hNota = nota.map(r => {
+            let brg = ""; try { brg = JSON.parse(r[2]).map(i => `${i.n} (${i.q}x${i.h})`).join("<br>"); } catch(e) { brg = r[2]; }
+            return `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
+        }).join("");
+        document.querySelector("#tabel_nota tbody").innerHTML = hNota || "<tr><td colspan='6' align='center'>Kosong</td></tr>";
 
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) });
-        alert("Nota Berhasil Disimpan!");
-        if(isPrint) window.print();
-        location.reload();
+        let hExp = exp.map(e => `<tr><td>${new Date(e[0]).toLocaleDateString()}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td><td>${e[3]}</td></tr>`).join("");
+        document.querySelector("#tabel_exp tbody").innerHTML = hExp || "<tr><td colspan='4' align='center'>Kosong</td></tr>";
     }
 
     async function loadData() {
         const res = await fetch(webAppUrl + "?action=getDashboard");
         const d = await res.json();
-        
         document.getElementById('d_cash').innerText = d.cash.toLocaleString();
         document.getElementById('d_bni').innerText = d.bni.toLocaleString();
         document.getElementById('d_bri').innerText = d.bri.toLocaleString();
@@ -153,15 +153,7 @@
         document.getElementById('d_keluar').innerText = d.keluarBulanIni.toLocaleString();
         document.getElementById('d_piutang').innerText = d.piutang.toLocaleString();
         document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
-
-        let hNota = "";
-        d.riwayatNota.forEach(r => {
-            let brg = "";
-            try { const list = JSON.parse(r[2]); brg = list.map(i => `${i.n} (${i.q}x${i.h})`).join("<br>"); } 
-            catch(e) { brg = r[2]; }
-            hNota += `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
-        });
-        document.querySelector("#tabel_nota tbody").innerHTML = hNota;
+        renderTabel(d.riwayatNota, d.riwayatExp);
     }
 
     window.onload = loadData;
