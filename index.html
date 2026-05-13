@@ -38,7 +38,7 @@
         <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Total Keuntungan Bulan Ini: <b id="d_laba">0</b></div>
     </div>
 
-    <!-- FORM NOTA & PEMESANAN -->
+    <!-- FORM PEMESANAN -->
     <div class="container">
         <h3>Input Nota & Pemesanan</h3>
         <input type="text" id="cs" placeholder="Nama Pelanggan / CS">
@@ -52,63 +52,36 @@
             </div>
         </div>
         <button type="button" onclick="tambahBaris()" style="background:#eee; color:#333; margin: 10px 0;">+ Tambah Item</button>
-        
         <p>Total Pesanan: <b id="txt_total">Rp 0</b></p>
         <p>DP Otomatis (50%): <b id="txt_dp">Rp 0</b></p>
-        
         <select id="metode"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
-        
         <button class="btn-blue" onclick="simpanData(false)">SIMPAN</button>
         <button class="btn-gray" onclick="window.print()">CETAK NOTA</button>
         <button class="btn-green" onclick="simpanData(true)">SIMPAN DAN CETAK</button>
         <button class="btn-wa" onclick="kirimWA()">ESTIMASI KE WA</button>
     </div>
 
-    <!-- FORM PENGELUARAN & PERALIHAN -->
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-        <div class="container" style="border-top: 4px solid var(--danger);">
-            <h4>Pengeluaran</h4>
-            <input type="text" id="ex_n" placeholder="Keperluan">
-            <input type="number" id="ex_h" placeholder="Biaya">
-            <select id="ex_m"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
-            <button style="background:var(--danger)" onclick="simpanPengeluaran()">SIMPAN</button>
-        </div>
-        <div class="container" style="border-top: 4px solid var(--warning);">
-            <h4>Peralihan Dana</h4>
-            <select id="tf_d"><option value="Cash">Dari Cash</option><option value="BNI">Dari BNI</option><option value="BRI">Dari BRI</option></select>
-            <select id="tf_k"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Cash">Ke Cash</option></select>
-            <input type="number" id="tf_j" placeholder="Nominal">
-            <button style="background:var(--warning); color:black;" onclick="prosesAlih()">PROSES</button>
+    <!-- FITUR CARI (BARU) -->
+    <div class="container" style="background: #eef2f7; border-left: 5px solid var(--primary);">
+        <h4>Cari Riwayat (Semua Bulan)</h4>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="cari_input" placeholder="Nama CS atau Nama Barang...">
+            <button onclick="cariRiwayat()" style="width:120px; background:var(--secondary);">CARI</button>
         </div>
     </div>
 
-    <!-- RIWAYAT -->
+    <!-- TABEL RIWAYAT -->
     <div class="container">
-        <h3>Riwayat Pemesanan (Bulan Ini)</h3>
+        <h3>Riwayat Pemesanan</h3>
         <table id="tabel_nota">
             <thead><tr><th>CS</th><th>Barang</th><th>Total</th><th>Bayar</th><th>Sisa</th><th>Metode</th></tr></thead>
             <tbody></tbody>
         </table>
-        
-        <h3 style="margin-top:20px;">Riwayat Pengeluaran (Bulan Ini)</h3>
-        <table id="tabel_exp">
-            <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Total</th><th>Metode</th></tr></thead>
-            <tbody></tbody>
-        </table>
     </div>
 </div>
 
-<!-- TEMPLATE NOTA CETAK -->
-<div class="print-area">
-    <center><h2>ASHEEQA PRINTING</h2><hr></center>
-    <p>Pelanggan: <span id="p_cs"></span></p>
-    <table style="width:100%;" id="p_table"></table>
-    <hr>
-    <p align="right">Total: <b id="p_tot"></b><br>DP: <span id="p_dp"></span><br>Sisa: <b id="p_sis"></b></p>
-</div>
-
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbylqPvrEHoa7T5hpkR5j_zxY15eIJXtIKs8MBshn9t3X119u6sO4dz3p61jYZXraI9s0w/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzuO7Cz3UvJ5jDl8xNa1-82aSOEbq-XAaKEFBR5CIvh2BRBiUG9B6bax98XwrrmskMr4A/exec';
 
     function tambahBaris() {
         const div = document.createElement('div');
@@ -129,6 +102,30 @@
         return grandTotal;
     }
 
+    // FUNGSI CARI RIWAYAT (BARU)
+    async function cariRiwayat() {
+        const keyword = document.getElementById('cari_input').value;
+        if(!keyword) return alert("Masukkan kata kunci pencarian!");
+        
+        document.querySelector("#tabel_nota tbody").innerHTML = "<tr><td colspan='6' align='center'>Mencari...</td></tr>";
+        
+        const res = await fetch(webAppUrl + "?action=searchData&key=" + keyword);
+        const d = await res.json();
+        
+        let htmlNota = "";
+        if(d.length === 0) {
+            htmlNota = "<tr><td colspan='6' align='center'>Data tidak ditemukan</td></tr>";
+        } else {
+            d.forEach(r => {
+                let brg = "";
+                try { const list = JSON.parse(r[2]); brg = list.map(i => `${i.n} (${i.q}x${i.h})`).join("<br>"); } 
+                catch(e) { brg = r[2]; }
+                htmlNota += `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
+            });
+        }
+        document.querySelector("#tabel_nota tbody").innerHTML = htmlNota;
+    }
+
     async function simpanData(isPrint) {
         const total = hitungTotal();
         const items = Array.from(document.querySelectorAll('.item-row')).map(r => ({
@@ -137,65 +134,12 @@
             h: r.querySelector('.nh').value
         }));
         
-        const payload = {
-            tipe: "Nota",
-            nama: document.getElementById('cs').value,
-            total: total,
-            dp: total * 0.5,
-            metode: document.getElementById('metode').value,
-            items: items
-        };
-
-        // Siapkan tampilan cetak
-        document.getElementById('p_cs').innerText = payload.nama;
-        document.getElementById('p_tot').innerText = "Rp " + total.toLocaleString();
-        document.getElementById('p_dp').innerText = "Rp " + (total * 0.5).toLocaleString();
-        document.getElementById('p_sis').innerText = "Rp " + (total * 0.5).toLocaleString();
+        const payload = { tipe: "Nota", nama: document.getElementById('cs').value, total: total, dp: total * 0.5, metode: document.getElementById('metode').value, items: items };
 
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) });
-        alert("Data Nota Berhasil Disimpan!");
+        alert("Nota Berhasil Disimpan!");
         if(isPrint) window.print();
         location.reload();
-    }
-
-    async function simpanPengeluaran() {
-        const payload = {
-            tipe: "Pengeluaran",
-            keterangan: document.getElementById('ex_n').value,
-            total: document.getElementById('ex_h').value,
-            metode: document.getElementById('ex_m').value
-        };
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) });
-        alert("Pengeluaran Berhasil Dicatat!");
-        location.reload();
-    }
-
-    async function prosesAlih() {
-        const payload = {
-            tipe: "Peralihan",
-            dari: document.getElementById('tf_d').value,
-            ke: document.getElementById('tf_k').value,
-            total: document.getElementById('tf_j').value
-        };
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify(payload) });
-        alert("Dana Berhasil Dialihkan!");
-        location.reload();
-    }
-
-    function kirimWA() {
-        const cs = document.getElementById('cs').value || "Pelanggan";
-        let msg = `*ESTIMASI PESANAN - ASHEEQA PRINTING*\n\nCS: ${cs}\n`;
-        let total = 0;
-        document.querySelectorAll('.item-row').forEach((row, i) => {
-            const n = row.querySelector('.nn').value;
-            const q = row.querySelector('.nq').value;
-            const h = row.querySelector('.nh').value;
-            const sub = q * h;
-            total += sub;
-            msg += `${i+1}. ${n} (${q}x${Number(h).toLocaleString()}) = Rp ${sub.toLocaleString()}\n`;
-        });
-        msg += `\n*Total: Rp ${total.toLocaleString()}*\n*DP 50%: Rp ${(total*0.5).toLocaleString()}*`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
     }
 
     async function loadData() {
@@ -210,7 +154,6 @@
         document.getElementById('d_piutang').innerText = d.piutang.toLocaleString();
         document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
 
-        // Riwayat Nota
         let hNota = "";
         d.riwayatNota.forEach(r => {
             let brg = "";
@@ -219,13 +162,6 @@
             hNota += `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
         });
         document.querySelector("#tabel_nota tbody").innerHTML = hNota;
-
-        // Riwayat Pengeluaran
-        let hExp = "";
-        d.riwayatExp.forEach(e => {
-            hExp += `<tr><td>${new Date(e[0]).toLocaleDateString()}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td><td>${e[3]}</td></tr>`;
-        });
-        document.querySelector("#tabel_exp tbody").innerHTML = hExp;
     }
 
     window.onload = loadData;
