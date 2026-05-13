@@ -15,10 +15,58 @@
         .item-row, .exp-item-row { border-bottom: 1px dashed #ddd; padding-bottom: 8px; margin-bottom: 8px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+        /* Sembunyikan semua elemen saat mencetak */
+@media print {
+    .no-print, button, .container, .grid-dash, h3, h4 {
+        display: none !important;
+    }
+
+    /* Hanya tampilkan area nota */
+    #area-cetak-nota {
+        display: block !important;
+        width: 100%;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    body {
+        background: white;
+    }
+}
+
+/* Sembunyikan area nota di layar biasa */
+#area-cetak-nota {
+    display: none;
+}
     </style>
 </head>
 <body>
-
+<div id="area-cetak-nota">
+    <center>
+        <h2 style="margin-bottom:5px;">ASHEEQA PRINTING</h2>
+        <p style="font-size:10px; margin:0;">Percetakan Undangan</p>
+        <p style="font-size:10px; margin:0;">Jl. Borong Raya 2 | 089699910769</p>
+        <hr>
+    </center>
+    <p>Nama CS: <span id="p_cs"></span></p>
+    <p>Tanggal: <span id="p_tgl"></span></p>
+    <table style="width:100%; border-collapse: collapse; font-size:12px;">
+        <thead>
+            <tr style="border-bottom: 1px solid black;">
+                <th align="left">Item</th>
+                <th align="center">Qty</th>
+                <th align="right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody id="p_items"></tbody>
+    </table>
+    <hr>
+    <p align="right">Total: <b id="p_total"></b></p>
+    <p align="right">Bayar/DP: <b id="p_dp"></b></p>
+    <p align="right">Sisa: <b id="p_sisa"></b></p>
+    <center>
+        <p style="font-size:10px; margin-top:20px;">Terima kasih atas pesanan Anda!</p>
+    </center>
+</div>
 <div class="no-print">
     <!-- DASHBOARD -->
     <div class="grid-dash">
@@ -104,7 +152,7 @@
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzg_kUp-LKCvr-g7Y6zrDN_V2pjYJjag9JKlsXoUMKWOMI071ctc6cmmb9rFe_uPSM9XA/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw4QHwY4SZnbRQrmxk8GI8YqdtBo0gRMQG_9drmf32CPqCClABIZaPNHExek6nc1PuqOg/exec';
 
     function tambahBaris() {
         const div = document.createElement('div');
