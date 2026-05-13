@@ -15,6 +15,7 @@
         .item-row { border-bottom: 1px dashed #ddd; padding-bottom: 8px; margin-bottom: 8px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+        .btn-wa { background: #25D366; color: white; }
     </style>
 </head>
 <body>
@@ -25,8 +26,8 @@
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
         <div class="stat-card">BRI<br><b id="d_bri">0</b></div>
-        <div class="stat-card" style="background:var(--success)">Masuk Bulan Ini<br><b id="d_masuk">0</b></div>
-        <div class="stat-card" style="background:var(--danger)">Keluar Bulan Ini<br><b id="d_keluar">0</b></div>
+        <div class="stat-card" style="background:var(--success)">Masuk Bln Ini<br><b id="d_masuk">0</b></div>
+        <div class="stat-card" style="background:var(--danger)">Keluar Bln Ini<br><b id="d_keluar">0</b></div>
         <div class="stat-card" style="background:#f39c12">Piutang<br><b id="d_piutang">0</b></div>
         <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Keuntungan Bulan Ini: <b id="d_laba">0</b></div>
     </div>
@@ -50,9 +51,10 @@
         <button style="background:var(--primary)" onclick="simpanData(false)">SIMPAN</button>
         <button style="background:#7f8c8d" onclick="window.print()">CETAK</button>
         <button style="background:var(--success); height: 50px;" onclick="simpanData(true)">SIMPAN & CETAK</button>
+        <button class="btn-wa" onclick="kirimEstimasiWA()">ESTIMASI KE WA</button>
     </div>
 
-    <!-- FORM PENGELUARAN & PERALIHAN -->
+    <!-- PENGELUARAN & PERALIHAN -->
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <div class="container" style="border-top: 4px solid var(--danger);">
             <h4>Pengeluaran</h4>
@@ -80,24 +82,17 @@
         </div>
     </div>
 
-    <!-- TABEL RIWAYAT -->
+    <!-- TABEL -->
     <div class="container">
         <h3>Riwayat Pemesanan</h3>
-        <table id="tabel_nota">
-            <thead><tr><th>CS</th><th>Barang</th><th>Total</th><th>Bayar</th><th>Sisa</th><th>Metode</th></tr></thead>
-            <tbody></tbody>
-        </table>
-
+        <table id="tabel_nota"><thead><tr><th>CS</th><th>Barang</th><th>Total</th><th>Bayar</th><th>Sisa</th><th>Metode</th></tr></thead><tbody></tbody></table>
         <h3 style="margin-top:20px;">Riwayat Pengeluaran</h3>
-        <table id="tabel_exp">
-            <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Total</th><th>Metode</th></tr></thead>
-            <tbody></tbody>
-        </table>
+        <table id="tabel_exp"><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Total</th><th>Metode</th></tr></thead><tbody></tbody></table>
     </div>
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbx8Wsh-6WCIFCa4F41HHr42K8uc859Glcn0b7sEszpcB6628MCg6vgwxcLQ7ladxvXF3A/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbyodYXOb4AUXS6uU5Ud-CJPA0lzI2dxiSssVuSIHK3TuAYWVcD7ifRYBl7TLXOO2fIy8g/exec';
 
     function tambahBaris() {
         const div = document.createElement('div');
@@ -118,12 +113,28 @@
         const t = hitungTotal();
         const items = Array.from(document.querySelectorAll('.item-row')).map(r => ({ n: r.querySelector('.nn').value, q: r.querySelector('.nq').value, h: r.querySelector('.nh').value }));
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: document.getElementById('cs').value, total: t, dp: t * 0.5, metode: document.getElementById('metode').value, items: items }) });
-        alert("Nota Berhasil!"); if(p) window.print(); location.reload();
+        alert("Nota Berhasil Disimpan!"); if(p) window.print(); location.reload();
     }
 
     async function simpanPengeluaran() {
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", keterangan: document.getElementById('ex_n').value, total: document.getElementById('ex_h').value, metode: document.getElementById('ex_m').value }) });
         alert("Pengeluaran Dicatat!"); location.reload();
+    }
+
+    async function prosesAlih() {
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: document.getElementById('tf_d').value, ke: document.getElementById('tf_k').value, total: document.getElementById('tf_j').value }) });
+        alert("Dana Dialihkan!"); location.reload();
+    }
+
+    function kirimEstimasiWA() {
+        const cs = document.getElementById('cs').value || "Pelanggan";
+        let total = 0; let msg = `*ESTIMASI PESANAN - ASHEEQA PRINTING*\n\nCS: ${cs}\n\n`;
+        document.querySelectorAll('.item-row').forEach((r, i) => {
+            const n = r.querySelector('.nn').value; const q = r.querySelector('.nq').value; const h = r.querySelector('.nh').value; const sub = q * h;
+            total += sub; if(n) msg += `${i+1}. ${n} (${q}x${Number(h).toLocaleString()}) = Rp ${sub.toLocaleString()}\n`;
+        });
+        msg += `\n*Total: Rp ${total.toLocaleString()}*\n*DP 50%: Rp ${(total*0.5).toLocaleString()}*`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
     }
 
     async function cariPerBulan() {
@@ -133,14 +144,12 @@
     }
 
     function renderTabel(nota, exp) {
-        let hNota = nota.map(r => {
+        document.querySelector("#tabel_nota tbody").innerHTML = nota.map(r => {
             let brg = ""; try { brg = JSON.parse(r[2]).map(i => `${i.n} (${i.q}x${i.h})`).join("<br>"); } catch(e) { brg = r[2]; }
             return `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[6]}</td></tr>`;
-        }).join("");
-        document.querySelector("#tabel_nota tbody").innerHTML = hNota || "<tr><td colspan='6' align='center'>Kosong</td></tr>";
+        }).join("") || "<tr><td colspan='6' align='center'>Kosong</td></tr>";
 
-        let hExp = exp.map(e => `<tr><td>${new Date(e[0]).toLocaleDateString()}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td><td>${e[3]}</td></tr>`).join("");
-        document.querySelector("#tabel_exp tbody").innerHTML = hExp || "<tr><td colspan='4' align='center'>Kosong</td></tr>";
+        document.querySelector("#tabel_exp tbody").innerHTML = exp.map(e => `<tr><td>${new Date(e[0]).toLocaleDateString()}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td><td>${e[3]}</td></tr>`).join("") || "<tr><td colspan='4' align='center'>Kosong</td></tr>";
     }
 
     async function loadData() {
@@ -155,7 +164,6 @@
         document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
         renderTabel(d.riwayatNota, d.riwayatExp);
     }
-
     window.onload = loadData;
 </script>
 </body>
