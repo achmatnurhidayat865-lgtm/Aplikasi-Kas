@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asheeqa Printing POS</title>
+    <style>
+        :root { --primary: #2980b9; --secondary: #2c3e50; --success: #27ae60; --danger: #c0392b; --mutasi: #e67e22; --accent: #8e44ad; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 10px; color: #333; }
+        .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #ddd; }
+        h2 { border-left: 5px solid var(--primary); padding-left: 10px; font-size: 1.1em; margin: 0 0 15px 0; }
+        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
+        button { cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
+        button:active { transform: scale(0.97); }
+        .btn-add { background: #f8f9fa; color: #555; border: 1px dashed #bbb; margin-bottom: 10px; }
+        .item-row { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        .row-flex { display: flex; gap: 8px; }
+        .total-box { padding: 12px; border-radius: 8px; font-weight: bold; display: flex; justify-content: space-between; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+        th { background: #f4f4f4; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. ESTIMASI WA -->
+    <div class="container" style="border-top: 5px solid var(--accent);">
+        <h2 style="color: var(--accent);">Kalkulator Estimasi Cepat</h2>
+        <input type="text" id="est_cs" placeholder="Nama Calon Pelanggan">
+        <div id="estContainer">
+            <div class="item-row est-row">
+                <input type="text" class="en" placeholder="Produk/Jasa">
+                <div class="row-flex">
+                    <input type="number" class="eq" placeholder="Qty" oninput="hitungEst()">
+                    <input type="number" class="eh" placeholder="Harga" oninput="hitungEst()">
+                </div>
+            </div>
+        </div>
+        <button class="btn-add" onclick="addItem('estContainer', 'est-row')">+ Tambah Item</button>
+        <div class="total-box" style="background: var(--accent); color: white;">
+            <span>Total:</span> <span id="estDisp">Rp 0</span>
+        </div>
+        <button onclick="kirimWA()" style="background: #25D366; color: white; margin-top:10px;">📱 KIRIM RINCIAN KE WA</button>
+    </div>
+
+    <!-- 2. INPUT NOTA -->
+    <div class="container" style="border-top: 5px solid var(--primary);">
+        <h2 style="color: var(--primary);">Input Nota Pesanan</h2>
+        <input type="text" id="cs" placeholder="Nama Pelanggan">
+        <select id="metode">
+            <option value="Cash">Tunai / Cash</option>
+            <option value="BRI">Transfer BRI</option>
+            <option value="BNI">Transfer BNI</option>
+        </select>
+        <div id="notaContainer">
+            <div class="item-row nota-row">
+                <input type="text" class="n" placeholder="Nama Produk">
+                <div class="row-flex">
+                    <input type="number" class="q" placeholder="Qty" oninput="hitungNota()">
+                    <input type="number" class="h" placeholder="Harga" oninput="hitungNota()">
+                </div>
+            </div>
+        </div>
+        <button class="btn-add" onclick="addItem('notaContainer', 'nota-row')">+ Tambah Item</button>
+        <div class="total-box" style="background: #e7f3ff; color: var(--primary);">
+            <span>Total Nota:</span> <span id="tDisp">Rp 0</span>
+        </div>
+        <input type="number" id="dp" placeholder="DP (Bayar Sekarang)" oninput="hitungNota()">
+        <div class="total-box" style="background: #fff0f0; color: var(--danger);">
+            <span>Sisa Piutang:</span> <span id="sDisp">Rp 0</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;">
+            <button id="btnSimpan" onclick="prosesNota(false, true)" style="background: var(--secondary); color:white;">💾 SIMPAN</button>
+            <button onclick="prosesNota(true, true)" style="background: var(--primary); color:white;">📄 SIMPAN & CETAK</button>
+            <button onclick="prosesNota(true, false)" style="background: #555; color:white;">🖨️ CETAK</button>
+        </div>
+    </div>
+
+    <!-- 3. INPUT PENGELUARAN -->
+    <div class="container" style="border-top: 5px solid var(--danger);">
+        <h2 style="color: var(--danger);">Input Pengeluaran Operasional</h2>
+        <div id="expContainer">
+            <div class="item-row exp-row">
+                <input type="text" class="xn" placeholder="Nama Barang/Beban">
+                <div class="row-flex">
+                    <input type="number" class="xq" placeholder="Qty" oninput="hitungExp()">
+                    <input type="number" class="xh" placeholder="Harga" oninput="hitungExp()">
+                </div>
+            </div>
+        </div>
+        <button class="btn-add" onclick="addItem('expContainer', 'exp-row')">+ Tambah Item</button>
+        <select id="xmetode">
+            <option value="Cash">Ambil Dari: Cash</option>
+            <option value="BRI">Ambil Dari: BRI</option>
+            <option value="BNI">Ambil Dari: BNI</option>
+        </select>
+        <div class="total-box" style="background: var(--danger); color: white;">
+            <span>Total Pengeluaran:</span> <span id="xDisp">Rp 0</span>
+        </div>
+        <button onclick="simpanExp()" style="background: var(--danger); color: white; margin-top:10px;">💸 CATAT PENGELUARAN</button>
+    </div>
+
+    <!-- 4. PERALIHAN DANA -->
+    <div class="container" style="border-top: 5px solid var(--mutasi);">
+        <h2 style="color: var(--mutasi);">Peralihan Dana (Mutasi)</h2>
+        <div class="row-flex">
+            <select id="m_dari"><option value="Cash">Dari: Cash</option><option value="BRI">Dari: BRI</option><option value="BNI">Dari: BNI</option></select>
+            <select id="m_ke"><option value="BNI">Ke: BNI</option><option value="BRI">Ke: BRI</option><option value="Cash">Ke: Cash</option></select>
+        </div>
+        <input type="number" id="m_amt" placeholder="Jumlah Nominal (Rp)">
+        <input type="text" id="m_ket" placeholder="Keterangan (Contoh: Setor Tunai)">
+        <button onclick="simpanMutasi()" style="background: var(--mutasi); color: white;">🔄 PROSES MUTASI</button>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzPyOsvAp7lvfW_5afWccfnMhqqcllvrZYGaDaM82jUn2Yg9dvMA-GSZ7jGCa8DcipSHA/exec'; // GANTI DENGAN URL APPS SCRIPT ANDA
+        let currentId = null;
+
+        // FUNGSI UMUM TAMBAH BARIS
+        function addItem(containerId, className) {
+            const container = document.getElementById(containerId);
+            const div = container.querySelector('.' + className).cloneNode(true);
+            div.querySelectorAll('input').forEach(i => i.value = '');
+            container.appendChild(div);
+        }
+
+        // HITUNG ESTIMASI
+        function hitungEst() {
+            let t = 0;
+            document.querySelectorAll('.est-row').forEach(r => {
+                t += (r.querySelector('.eq').value * r.querySelector('.eh').value) || 0;
+            });
+            document.getElementById('estDisp').innerText = "Rp " + t.toLocaleString();
+            return t;
+        }
+
+        function kirimWA() {
+            const nama = document.getElementById('est_cs').value || "Pelanggan";
+            let teks = `*ESTIMASI PENAWARAN - ASHEEQA PRINTING*\nCustomer: ${nama}\n\n`;
+            document.querySelectorAll('.est-row').forEach(r => {
+                const n = r.querySelector('.en').value || "Item";
+                const q = r.querySelector('.eq').value || 0;
+                const h = r.querySelector('.eh').value || 0;
+                if(q > 0) teks += `• ${n} (${q}x) = Rp ${(q*h).toLocaleString()}\n`;
+            });
+            teks += `\n*TOTAL: Rp ${hitungEst().toLocaleString()}*`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(teks)}`, '_blank');
+        }
+
+        // HITUNG NOTA
+        function hitungNota() {
+            let t = 0;
+            document.querySelectorAll('.nota-row').forEach(r => {
+                t += (r.querySelector('.q').value * r.querySelector('.h').value) || 0;
+            });
+            const dp = parseFloat(document.getElementById('dp').value) || 0;
+            document.getElementById('tDisp').innerText = "Rp " + t.toLocaleString();
+            document.getElementById('sDisp').innerText = "Rp " + (t - dp).toLocaleString();
+            return { total: t, dp: dp, sisa: t - dp };
+        }
+
+        // HITUNG PENGELUARAN
+        function hitungExp() {
+            let t = 0;
+            document.querySelectorAll('.exp-row').forEach(r => {
+                t += (r.querySelector('.xq').value * r.querySelector('.xh').value) || 0;
+            });
+            document.getElementById('xDisp').innerText = "Rp " + t.toLocaleString();
+            return t;
+        }
+
+        // PROSES SIMPAN/CETAK NOTA
+        async function prosesNota(cetak, simpan) {
+            const { total, dp, sisa } = hitungNota();
+            const data = {
+                tipe: "Nota",
+                id: currentId,
+                nama: document.getElementById('cs').value,
+                metode: document.getElementById('metode').value,
+                total, dp, sisa,
+                items: Array.from(document.querySelectorAll('.nota-row')).map(r => ({
+                    n: r.querySelector('.n').value, q: r.querySelector('.q').value, h: r.querySelector('.h').value
+                }))
+            };
+
+            if(simpan) {
+                document.getElementById('btnSimpan').innerText = "⏳...";
+                await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
+                alert("Data Berhasil Disimpan!");
+            }
+            if(cetak) alert("Mencetak Nota: " + data.nama + " (Total: Rp " + total.toLocaleString() + ")");
+            if(simpan) location.reload();
+        }
+
+        // SIMPAN PENGELUARAN
+        async function simpanExp() {
+            const data = {
+                tipe: "Pengeluaran",
+                total: hitungExp(),
+                metode: document.getElementById('xmetode').value,
+                items: Array.from(document.querySelectorAll('.exp-row')).map(r => ({
+                    n: r.querySelector('.xn').value, q: r.querySelector('.xq').value, h: r.querySelector('.xh').value
+                }))
+            };
+            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
+            alert("Pengeluaran Dicatat!"); location.reload();
+        }
+
+        // SIMPAN MUTASI
+        async function simpanMutasi() {
+            const data = {
+                tipe: "Mutasi",
+                dari: document.getElementById('m_dari').value,
+                ke: document.getElementById('m_ke').value,
+                jumlah: document.getElementById('m_amt').value,
+                ket: document.getElementById('m_ket').value
+            };
+            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
+            alert("Mutasi Berhasil!"); location.reload();
+        }
+    </script>
+</body>
+</html>
