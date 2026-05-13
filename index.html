@@ -19,7 +19,7 @@
         .dash-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; background: #2c3e50; color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .dash-card { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; text-align: center; }
         .dash-card small { font-size: 10px; opacity: 0.8; text-transform: uppercase; }
-        .dash-card b { display: block; font-size: 13px; margin-top: 4px; }
+        .dash-card b { display: block; font-size: 12px; margin-top: 4px; }
         .info-dp { background: #fff9e6; border: 1px solid #f1c40f; padding: 10px; border-radius: 8px; margin: 10px 0; color: #7f8c8d; font-size: 14px; }
     </style>
 </head>
@@ -36,11 +36,19 @@
         <div class="dash-card" style="background:var(--success)"><small>Laba</small><b id="d_laba">Rp 0</b></div>
     </div>
 
-    <!-- ESTIMASI -->
+    <!-- 1. ESTIMASI WA -->
     <div class="container" style="border-top: 5px solid var(--accent);">
         <h2 style="color: var(--accent);">Kalkulator Estimasi</h2>
         <input type="text" id="est_cs" placeholder="Nama Pelanggan">
-        <div id="estCont"><div class="item-row e-row"><input type="text" class="en" placeholder="Item/Jasa"><div class="row-flex"><input type="number" class="eq" placeholder="Qty" oninput="reEst()"><input type="number" class="eh" placeholder="Harga" oninput="reEst()"></div></div></div>
+        <div id="estCont">
+            <div class="item-row e-row">
+                <input type="text" class="en" placeholder="Item/Jasa">
+                <div class="row-flex">
+                    <input type="number" class="eq" placeholder="Qty" oninput="reEst()">
+                    <input type="number" class="eh" placeholder="Harga" oninput="reEst()">
+                </div>
+            </div>
+        </div>
         <button class="btn-add" onclick="addR('estCont', 'e-row')">+ Tambah Item</button>
         <div class="info-dp">
             Total: <b id="et_val" style="color:#333">Rp 0</b> | 
@@ -49,36 +57,56 @@
         <button onclick="sendWA()" style="background: #25D366;">📱 KIRIM KE WHATSAPP</button>
     </div>
 
-    <!-- NOTA -->
+    <!-- 2. INPUT NOTA -->
     <div class="container" style="border-top: 5px solid var(--primary);">
-        <h2 style="color: var(--primary);">Input Nota</h2>
+        <h2 style="color: var(--primary);">Input Nota Pesanan</h2>
         <input type="text" id="cs" placeholder="Nama Pelanggan">
         <select id="met"><option value="Cash">Simpan Ke: Cash</option><option value="BRI">Simpan Ke: BRI</option><option value="BNI">Simpan Ke: BNI</option></select>
-        <div id="nCont"><div class="item-row n-row"><input type="text" class="nn" placeholder="Produk"><div class="row-flex"><input type="number" class="nq" placeholder="Qty" oninput="reNota()"><input type="number" class="nh" placeholder="Harga" oninput="reNota()"></div></div></div>
+        <div id="nCont">
+            <div class="item-row n-row">
+                <input type="text" class="nn" placeholder="Produk">
+                <div class="row-flex">
+                    <input type="number" class="nq" placeholder="Qty" oninput="reNota()">
+                    <input type="number" class="nh" placeholder="Harga" oninput="reNota()">
+                </div>
+            </div>
+        </div>
         <button class="btn-add" onclick="addR('nCont', 'n-row')">+ Tambah Item</button>
-        <input type="number" id="dp" placeholder="DP/Bayar Sekarang" oninput="reNota()">
-        <button id="btnS" onclick="saveN()" style="background: var(--primary);">💾 SIMPAN NOTA (Total: <span id="nt_val">0</span>)</button>
+        <div style="font-weight:bold; margin: 10px 0;">Total Nota: <span id="nt_txt">Rp 0</span></div>
+        <input type="number" id="dp" placeholder="DP / Bayar Sekarang (Otomatis 50%)">
+        <button id="btnS" onclick="saveN()" style="background: var(--primary);">💾 SIMPAN NOTA</button>
     </div>
 
-    <!-- PENGELUARAN -->
+    <!-- 3. PENGELUARAN -->
     <div class="container" style="border-top: 5px solid var(--danger);">
         <h2 style="color: var(--danger);">Input Pengeluaran</h2>
-        <div id="xCont"><div class="item-row x-row"><input type="text" class="xn" placeholder="Keperluan"><div class="row-flex"><input type="number" class="xq" placeholder="Qty" oninput="reX()"><input type="number" class="xh" placeholder="Harga" oninput="reX()"></div></div></div>
+        <div id="xCont">
+            <div class="item-row x-row">
+                <input type="text" class="xn" placeholder="Keperluan">
+                <div class="row-flex">
+                    <input type="number" class="xq" placeholder="Qty" oninput="reX()">
+                    <input type="number" class="xh" placeholder="Harga" oninput="reX()">
+                </div>
+            </div>
+        </div>
         <button class="btn-add" onclick="addR('xCont', 'x-row')">+ Tambah Item</button>
         <select id="xmet"><option value="Cash">Ambil Dari: Cash</option><option value="BRI">Ambil Dari: BRI</option><option value="BNI">Ambil Dari: BNI</option></select>
         <button onclick="saveX()" style="background: var(--danger);">💸 SIMPAN PENGELUARAN (<span id="xt_val">0</span>)</button>
     </div>
 
-    <!-- MUTASI -->
+    <!-- 4. MUTASI -->
     <div class="container" style="border-top: 5px solid var(--mutasi);">
         <h2 style="color: var(--mutasi);">Mutasi Dana</h2>
-        <div class="row-flex"><select id="mdari"><option value="Cash">Dari: Cash</option><option value="BRI">Dari: BRI</option><option value="BNI">Dari: BNI</option></select><select id="mke"><option value="BNI">Ke: BNI</option><option value="BRI">Ke: BRI</option><option value="Cash">Ke: Cash</option></select></div>
+        <div class="row-flex">
+            <select id="mdari"><option value="Cash">Dari: Cash</option><option value="BRI">Dari: BRI</option><option value="BNI">Dari: BNI</option></select>
+            <select id="mke"><option value="BNI">Ke: BNI</option><option value="BRI">Ke: BRI</option><option value="Cash">Ke: Cash</option></select>
+        </div>
         <input type="number" id="mamt" placeholder="Jumlah (Rp)">
         <button onclick="saveM()" style="background: var(--mutasi);">🔄 PROSES MUTASI</button>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxUpe2vlzlZexLbC6vO-mHrle216KSmLfV_mE4IZL3_fy9RcQ7bKZzIjtE8NzlremIY1g/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5eIIeBTbV9_ZV2SeE8MNJp3l59O7MdioRNTLIfXDmUj3ob4cLMQKGuiTWNV61HYWSGw/exec';
 
         window.onload = async () => {
             try {
@@ -96,7 +124,12 @@
         function addR(id, cl) {
             const c = document.getElementById(id);
             const d = c.querySelector('.'+cl).cloneNode(true);
-            d.querySelectorAll('input').forEach(i => i.value = '');
+            d.querySelectorAll('input').forEach(i => {
+                i.value = '';
+                if(cl === 'n-row') i.oninput = reNota;
+                if(cl === 'e-row') i.oninput = reEst;
+                if(cl === 'x-row') i.oninput = reX;
+            });
             c.appendChild(d);
         }
 
@@ -122,26 +155,29 @@
         }
 
         function reNota() {
-            let t = 0; document.querySelectorAll('.n-row').forEach(r => { t += (r.querySelector('.nq').value * r.querySelector('.nh').value) || 0; });
-            document.getElementById('nt_val').innerText = t.toLocaleString(); return t;
+            let t = 0; 
+            document.querySelectorAll('.n-row').forEach(r => { t += (r.querySelector('.nq').value * r.querySelector('.nh').value) || 0; });
+            document.getElementById('nt_txt').innerText = "Rp " + t.toLocaleString();
+            document.getElementById('dp').value = t * 0.5; // Otomatis DP 50%
+            return t;
         }
 
         async function saveN() {
             const t = reNota(); const dp = document.getElementById('dp').value || 0;
             const data = { tipe: "Nota", nama: document.getElementById('cs').value, metode: document.getElementById('met').value, total: t, dp: dp, sisa: t - dp, items: Array.from(document.querySelectorAll('.n-row')).map(r => ({ n: r.querySelector('.nn').value, q: r.querySelector('.nq').value, h: r.querySelector('.nh').value })) };
             await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
-            alert("Nota Berhasil!"); location.reload();
+            alert("Nota Berhasil Disimpan!"); location.reload();
         }
 
         function reX() {
             let t = 0; document.querySelectorAll('.x-row').forEach(r => { t += (r.querySelector('.xq').value * r.querySelector('.xh').value) || 0; });
-            document.getElementById('xt_val').innerText = t.toLocaleString(); return t;
+            document.getElementById('xt_val').innerText = "Rp " + t.toLocaleString(); return t;
         }
 
         async function saveX() {
             const data = { tipe: "Pengeluaran", total: reX(), metode: document.getElementById('xmet').value, items: Array.from(document.querySelectorAll('.x-row')).map(r => ({ n: r.querySelector('.xn').value, q: r.querySelector('.xq').value, h: r.querySelector('.xh').value })) };
             await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
-            alert("Pengeluaran Berhasil!"); location.reload();
+            alert("Pengeluaran Berhasil Dicatat!"); location.reload();
         }
 
         async function saveM() {
