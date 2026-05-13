@@ -5,86 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asheeqa Printing POS</title>
     <style>
-        :root { --primary: #2980b9; --secondary: #2c3e50; --success: #27ae60; --danger: #c0392b; --mutasi: #e67e22; --accent: #8e44ad; }
+        :root { --primary: #2980b9; --secondary: #2c3e50; --success: #27ae60; --danger: #c0392b; --warning: #f1c40f; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; font-size: 14px; }
         .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
-        h2 { border-left: 5px solid var(--primary); padding-left: 10px; font-size: 1.1em; margin: 0 0 15px 0; }
         input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        button { cursor: pointer; font-weight: bold; border: none; color: white; transition: 0.2s; }
-        .btn-add { background: #f8f9fa; color: #555; border: 1px dashed #bbb; margin-bottom: 10px; }
-        .item-row { background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        button { cursor: pointer; font-weight: bold; border: none; color: white; }
         .row-flex { display: flex; gap: 8px; }
+        
+        /* DASHBOARD */
         .dash-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; background: #2c3e50; color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        .dash-card { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; text-align: center; }
+        .dash-card { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; text-align: center; font-size: 11px; }
         .dash-card b { display: block; font-size: 12px; margin-top: 4px; }
-        .table-res { overflow-x: auto; margin-top: 10px; }
-        table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        table th, table td { border: 1px solid #ddd; padding: 6px; text-align: left; }
+
+        /* HISTORY CARD STYLE */
+        .history-card { background: #fff; border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .history-info b { font-size: 14px; display: block; }
+        .history-info small { color: #7f8c8d; font-size: 11px; }
+        .history-amount { text-align: right; }
+        .history-amount b { color: var(--success); font-size: 13px; }
+        .history-amount.exp b { color: var(--danger); }
+        .btn-edit-sm { background: var(--warning); color: #fff; padding: 4px 8px; border-radius: 5px; font-size: 10px; margin-top: 5px; width: auto; }
+
         .tab-btn { display: flex; gap: 5px; margin-bottom: 10px; }
-        .tab-btn button { flex: 1; background: #95a5a6; font-size: 12px; }
+        .tab-btn button { flex: 1; background: #95a5a6; padding: 10px; font-size: 12px; }
         .tab-btn button.active { background: var(--secondary); }
-        #nota-title { display: none; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* PRINT STYLE A5 */
         @media print {
-            .dash-box, .filter-area, .btn-add, button, input, select, .container:not(#nota-section) { display: none !important; }
-            #nota-section { display: block !important; border: none; }
-            #nota-title { display: block !important; }
+            @page { size: A5; margin: 5mm; }
+            .no-print, .dash-box, .tab-btn, button, input, select, .container:not(#nota-section) { display: none !important; }
+            #nota-section { display: block !important; border: 2px solid #333 !important; padding: 15px !important; width: 100%; }
+            #nota-title { text-align: center; border-bottom: 2px double #333; margin-bottom: 10px; }
+            .nota-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            .nota-table th, .nota-table td { border: 1px solid #333; padding: 5px; font-size: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" style="display: flex; gap: 5px; margin-bottom: 10px;">
-        <select id="f_month" onchange="loadDashboard()"></select>
-        <select id="f_year" onchange="loadDashboard()"></select>
+    <div class="no-print">
+        <div class="container" style="display: flex; gap: 5px;">
+            <select id="f_month" onchange="loadDashboard()"></select>
+            <select id="f_year" onchange="loadDashboard()"></select>
+        </div>
+
+        <div class="dash-box">
+            <div class="dash-card"><small>Cash</small><b id="d_cash">0</b></div>
+            <div class="dash-card"><small>BRI</small><b id="d_bri">0</b></div>
+            <div class="dash-card"><small>BNI</small><b id="d_bni">0</b></div>
+            <div class="dash-card" style="background:rgba(46,204,113,0.2)"><small>Masuk</small><b id="d_masuk">0</b></div>
+            <div class="dash-card" style="background:rgba(231,76,60,0.2)"><small>Keluar</small><b id="d_keluar">0</b></div>
+            <div class="dash-card" style="background:var(--success)"><small>Laba</small><b id="d_laba">0</b></div>
+        </div>
     </div>
 
-    <div class="dash-box">
-        <div class="dash-card"><small>Cash</small><b id="d_cash">Rp 0</b></div>
-        <div class="dash-card"><small>BRI</small><b id="d_bri">Rp 0</b></div>
-        <div class="dash-card"><small>BNI</small><b id="d_bni">Rp 0</b></div>
-        <div class="dash-card" style="background:rgba(46,204,113,0.2)"><small>Pemasukan</small><b id="d_masuk">Rp 0</b></div>
-        <div class="dash-card" style="background:rgba(231,76,60,0.2)"><small>Pengeluaran</small><b id="d_keluar">Rp 0</b></div>
-        <div class="dash-card" style="background:var(--success)"><small>Laba</small><b id="d_laba">Rp 0</b></div>
-    </div>
-
-    <div class="container">
+    <div class="container no-print">
         <div class="tab-btn">
-            <button id="btn-nota" class="active" onclick="switchTab('nota')">Riwayat Nota</button>
-            <button id="btn-exp" onclick="switchTab('exp')">Riwayat Pengeluaran</button>
+            <button id="btn-nota" class="active" onclick="switchTab('nota')">Pemasukan</button>
+            <button id="btn-exp" onclick="switchTab('exp')">Pengeluaran</button>
         </div>
-        <div id="tab-nota" class="table-res">
-            <table><thead><tr><th>Nama</th><th>Total</th><th>Status</th></tr></thead><tbody id="list-nota"></tbody></table>
-        </div>
-        <div id="tab-exp" class="table-res" style="display:none;">
-            <table><thead><tr><th>Item</th><th>Total</th><th>Metode</th></tr></thead><tbody id="list-exp"></tbody></table>
-        </div>
+        <div id="list-nota"></div>
+        <div id="list-exp" style="display:none;"></div>
     </div>
 
-    <div id="nota-section" class="container" style="border-top: 5px solid var(--primary);">
-        <div id="nota-title"><h1>ASHEEQA PRINTING</h1><p>WA: 089699910769</p></div>
-        <h2>Input Nota Pesanan</h2>
-        <input type="text" id="cs" placeholder="Nama Pelanggan">
-        <select id="met"><option value="Cash">Cash</option><option value="BRI">BRI</option><option value="BNI">BNI</option></select>
-        <div id="nCont"><div class="item-row n-row"><input type="text" class="nn" placeholder="Produk"><div class="row-flex"><input type="number" class="nq" placeholder="Qty" oninput="reNota()"><input type="number" class="nh" placeholder="Harga" oninput="reNota()"></div></div></div>
-        <button class="btn-add" onclick="addR('nCont', 'n-row')">+ Tambah Item</button>
-        <p>Total: <b id="nt_txt">Rp 0</b></p>
-        <input type="number" id="dp" placeholder="DP (Otomatis 50%)">
-        <button onclick="saveAndPrint()" style="background: var(--success); margin-bottom: 5px;">🖨️ SIMPAN & CETAK</button>
-        <div class="row-flex">
-            <button onclick="saveN()" style="background: var(--primary); flex: 1;">💾 SIMPAN SAJA</button>
-            <button onclick="window.print()" style="background: var(--secondary); flex: 1;">📄 HANYA CETAK</button>
+    <!-- FORM ESTIMASI HARGA & WA -->
+    <div class="container no-print" style="border-top: 5px solid var(--warning);">
+        <h3>Form Estimasi Harga (WA)</h3>
+        <input type="text" id="est_cs" placeholder="Nama Pelanggan">
+        <div id="est_items">
+            <div class="item-row est-row">
+                <input type="text" class="en" placeholder="Nama Barang">
+                <div class="row-flex">
+                    <input type="number" class="eq" placeholder="Qty" oninput="hitungEst()">
+                    <input type="number" class="eh" placeholder="Harga Satuan" oninput="hitungEst()">
+                </div>
+                <label><input type="checkbox" class="efree" onchange="hitungEst()"> Item FREE</label>
+            </div>
         </div>
+        <button onclick="addR('est_items', 'est-row')" style="background:#eee; color:#333; margin-top:5px;">+ Tambah Barang</button>
+        <p>Total: <b id="est_total_txt">Rp 0</b> | DP 50%: <b id="est_dp_txt">Rp 0</b></p>
+        <button onclick="kirimWAEstimasi()" style="background: var(--success);">📲 KIRIM ESTIMASI KE WHATSAPP</button>
     </div>
 
-    <div class="container" style="border-top: 5px solid var(--danger);">
-        <h2>Input Pengeluaran</h2>
-        <div id="xCont"><div class="item-row x-row"><input type="text" class="xn" placeholder="Keperluan"><div class="row-flex"><input type="number" class="xq" placeholder="Qty" oninput="reX()"><input type="number" class="xh" placeholder="Harga" oninput="reX()"></div></div></div>
-        <button class="btn-add" onclick="addR('xCont', 'x-row')">+ Tambah Item</button>
-        <button onclick="saveX()" style="background: var(--danger);">💸 SIMPAN PENGELUARAN (<span id="xt_val">0</span>)</button>
+    <!-- NOTA SECTION -->
+    <div id="nota-section" class="container">
+        <div id="nota-title">
+            <h1 style="margin:0; color:var(--primary);">ASHEEQA PRINTING</h1>
+            <small>WA: 089699910769 | Jl. Borong Raya 2</small>
+        </div>
+        
+        <div class="no-print">
+            <h3>Input Nota Pesanan</h3>
+            <input type="text" id="cs" placeholder="Nama Pelanggan">
+            <select id="met"><option value="Cash">Cash</option><option value="BRI">BRI</option><option value="BNI">BNI</option></select>
+            <div id="nCont"><div class="item-row n-row"><input type="text" class="nn" placeholder="Produk"><div class="row-flex"><input type="number" class="nq" placeholder="Qty" oninput="reNota()"><input type="number" class="nh" placeholder="Harga" oninput="reNota()"></div></div></div>
+            <button onclick="addR('nCont', 'n-row')" style="background:#eee; color:#333;">+ Tambah Item</button>
+            <p>Total: <b id="nt_txt">Rp 0</b></p>
+            <input type="number" id="dp" placeholder="DP (Otomatis 50%)">
+        </div>
+
+        <!-- PRINT VIEW ONLY -->
+        <div class="print-only" style="display:none;" id="print-view">
+            <p><b>Pelanggan:</b> <span id="p-nama"></span> | <b>Metode:</b> <span id="p-met"></span></p>
+            <table class="nota-table">
+                <thead><tr><th>Barang</th><th>Qty</th><th>Harga</th><th>Total</th></tr></thead>
+                <tbody id="p-items"></tbody>
+            </table>
+            <div style="text-align:right">
+                <p>Total: <b id="p-total"></b></p>
+                <p>Bayar/DP: <b id="p-dp"></b></p>
+                <p>Sisa Tagihan: <b id="p-sisa"></b></p>
+            </div>
+            <div style="text-align:center; border-top:1px dashed #333; margin-top:10px; padding-top:10px;">
+                <p><b>Estimasi Selesai: <span id="p-est"></span></b></p>
+                <p>"Proses Pengerjaan 7 Hari Kerja Setelah Pembayaran DP"</p>
+            </div>
+        </div>
+
+        <div class="no-print">
+            <button onclick="saveAndPrint()" style="background: var(--success);">🖨️ SIMPAN & CETAK A5</button>
+            <div class="row-flex">
+                <button onclick="saveN()" style="background: var(--primary); flex:1">💾 SIMPAN SAJA</button>
+                <button onclick="window.print()" style="background: var(--secondary); flex:1">📄 HANYA CETAK</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxCNkoJqLs54I-nnc05nyphAN1NWbOk-LcuabaF_uXwok-0tyhJE20Ez7aEk7m0EeIBfA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwyUfm6kLQLp_nAlblyu5Y-dTQYjqBiZWvnJfC0z9rCdUY_kiTmF2AcQpxKFAJXd_ZRlQ/exec';
 
         window.onload = () => {
             const mSelect = document.getElementById('f_month');
@@ -99,37 +147,76 @@
         async function loadDashboard() {
             const m = document.getElementById('f_month').value;
             const y = document.getElementById('f_year').value;
-            try {
-                const res = await fetch(`${scriptURL}?action=getDashboard&month=${m}&year=${y}`);
-                const d = await res.json();
-                document.getElementById('d_cash').innerText = "Rp " + d.cash.toLocaleString();
-                document.getElementById('d_bri').innerText = "Rp " + d.bri.toLocaleString();
-                document.getElementById('d_bni').innerText = "Rp " + d.bni.toLocaleString();
-                document.getElementById('d_masuk').innerText = "Rp " + d.masuk.toLocaleString();
-                document.getElementById('d_keluar').innerText = "Rp " + d.keluar.toLocaleString();
-                document.getElementById('d_laba').innerText = "Rp " + d.laba.toLocaleString();
+            const res = await fetch(`${scriptURL}?action=getDashboard&month=${m}&year=${y}`);
+            const d = await res.json();
+            document.getElementById('d_cash').innerText = d.cash.toLocaleString();
+            document.getElementById('d_bri').innerText = d.bri.toLocaleString();
+            document.getElementById('d_bni').innerText = d.bni.toLocaleString();
+            document.getElementById('d_masuk').innerText = d.masuk.toLocaleString();
+            document.getElementById('d_keluar').innerText = d.keluar.toLocaleString();
+            document.getElementById('d_laba').innerText = d.laba.toLocaleString();
 
-                document.getElementById('list-nota').innerHTML = d.riwayatNota.map(r => `<tr><td>${r[1]}</td><td>${Number(r[3]).toLocaleString()}</td><td style="color:${r[5]<=0?'green':'red'}">${r[5]<=0?'Lunas':'Sisa '+Number(r[5]).toLocaleString()}</td></tr>`).join('');
-                document.getElementById('list-exp').innerHTML = d.riwayatExp.map(r => `<tr><td>${JSON.parse(r[1])[0].n}...</td><td>${Number(r[2]).toLocaleString()}</td><td>${r[3]}</td></tr>`).join('');
-            } catch(e) {}
+            document.getElementById('list-nota').innerHTML = d.riwayatNota.map(r => `
+                <div class="history-card">
+                    <div class="history-info"><b>${r[1]}</b><small>${JSON.parse(r[2]).map(i=>i.n).join(', ')}</small>
+                    <button class="btn-edit-sm" onclick="editData('${r[0]}','${r[1]}','nota')">EDIT</button></div>
+                    <div class="history-amount"><b>+Rp ${Number(r[4]).toLocaleString()}</b><small>${r[6]}</small></div>
+                </div>`).join('');
+        }
+
+        function hitungEst() {
+            let total = 0;
+            document.querySelectorAll('.est-row').forEach(r => {
+                if(!r.querySelector('.efree').checked) total += (r.querySelector('.eq').value * r.querySelector('.eh').value) || 0;
+            });
+            document.getElementById('est_total_txt').innerText = "Rp " + total.toLocaleString();
+            document.getElementById('est_dp_txt').innerText = "Rp " + (total*0.5).toLocaleString();
+            return total;
+        }
+
+        function kirimWAEstimasi() {
+            const nama = document.getElementById('est_cs').value || "[Nama Pelanggan]";
+            const t = hitungEst(); const dp = t * 0.5; const sisa = t - dp;
+            const estDate = new Date(); estDate.setDate(estDate.getDate() + 7);
+            const tglSelesai = estDate.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+            let items = ""; document.querySelectorAll('.est-row').forEach(r => {
+                items += `${r.querySelector('.en').value} x ${r.querySelector('.eq').value} ${r.querySelector('.efree').checked ? '*(FREE)*' : ''}\n`;
+            });
+
+            const pesan = `Halo Kak *${nama}*, Terima kasih telah memesan di *Asheeqa Printing*! Berikut adalah rincian pesanan Kakak:\n\n*RINCIAN NOTA: #EST*\n------------------------------------------\n*Item Pesanan:*\n${items}\n*Total Harga:* Rp ${t.toLocaleString()}\n*DP / Bayar:* Rp ${dp.toLocaleString()}\n*Sisa Tagihan:* *Rp ${sisa.toLocaleString()}*\n*Metode Pembayaran:* [Cash/BRI/BNI]\n\n*ESTIMASI SELESAI:*\n📅 *${tglSelesai}*\n\n📢 *"Proses Pengerjaan 7 Hari Kerja Setelah Pembayaran DP"*`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(pesan)}`, '_blank');
         }
 
         function reNota() { let t = 0; document.querySelectorAll('.n-row').forEach(r => { t += (r.querySelector('.nq').value * r.querySelector('.nh').value) || 0; }); document.getElementById('nt_txt').innerText = "Rp " + t.toLocaleString(); document.getElementById('dp').value = t * 0.5; return t; }
         
         async function saveN() {
-            const t = reNota(); const dp = document.getElementById('dp').value || 0;
-            const est = new Date(); est.setDate(est.getDate() + 7);
+            const t = reNota(); const dp = document.getElementById('dp').value;
             const data = { tipe: "Nota", nama: document.getElementById('cs').value, metode: document.getElementById('met').value, total: t, dp: dp, sisa: t - dp, items: Array.from(document.querySelectorAll('.n-row')).map(r => ({ n: r.querySelector('.nn').value, q: r.querySelector('.nq').value, h: r.querySelector('.nh').value })) };
             await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) });
-            alert(`Berhasil!\nEstimasi Selesai: ${est.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long'})}\n"Proses Pengerjaan 7 Hari Kerja Setelah Pembayaran DP"`);
-            loadDashboard();
+            alert("Tersimpan!"); loadDashboard();
         }
 
-        async function saveAndPrint() { await saveN(); window.print(); }
-        function addR(id, cl) { const c = document.getElementById(id); const d = c.querySelector('.'+cl).cloneNode(true); d.querySelectorAll('input').forEach(i => i.value = ''); c.appendChild(d); }
-        function switchTab(t) { document.getElementById('tab-nota').style.display = t==='nota'?'block':'none'; document.getElementById('tab-exp').style.display = t==='exp'?'block':'none'; document.getElementById('btn-nota').className = t==='nota'?'active':''; document.getElementById('btn-exp').className = t==='exp'?'active':''; }
-        function reX() { let t = 0; document.querySelectorAll('.x-row').forEach(r => { t += (r.querySelector('.xq').value * r.querySelector('.xh').value) || 0; }); document.getElementById('xt_val').innerText = "Rp " + t.toLocaleString(); return t; }
-        async function saveX() { const data = { tipe: "Pengeluaran", total: reX(), metode: 'Cash', items: Array.from(document.querySelectorAll('.x-row')).map(r => ({ n: r.querySelector('.xn').value, q: r.querySelector('.xq').value, h: r.querySelector('.xh').value })) }; await fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) }); alert("Pengeluaran tersimpan!"); loadDashboard(); }
+        async function saveAndPrint() {
+            const t = reNota(); const dp = document.getElementById('dp').value;
+            document.getElementById('p-nama').innerText = document.getElementById('cs').value;
+            document.getElementById('p-met').innerText = document.getElementById('met').value;
+            document.getElementById('p-total').innerText = "Rp " + t.toLocaleString();
+            document.getElementById('p-dp').innerText = "Rp " + Number(dp).toLocaleString();
+            document.getElementById('p-sisa').innerText = "Rp " + (t-dp).toLocaleString();
+            const est = new Date(); est.setDate(est.getDate() + 7);
+            document.getElementById('p-est').innerText = est.toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+            
+            document.getElementById('p-items').innerHTML = Array.from(document.querySelectorAll('.n-row')).map(r => `<tr><td>${r.querySelector('.nn').value}</td><td>${r.querySelector('.nq').value}</td><td>${Number(r.querySelector('.nh').value).toLocaleString()}</td><td>${(r.querySelector('.nq').value * r.querySelector('.nh').value).toLocaleString()}</td></tr>`).join('');
+            
+            document.getElementById('print-view').style.display = 'block';
+            await saveN();
+            window.print();
+            document.getElementById('print-view').style.display = 'none';
+        }
+
+        function addR(id, cl) { const c = document.getElementById(id); const d = c.querySelector('.'+cl).cloneNode(true); d.querySelectorAll('input').forEach(i => i.value = ''); if(d.querySelector('.efree')) d.querySelector('.efree').checked = false; c.appendChild(d); }
+        function switchTab(t) { document.getElementById('list-nota').style.display = t==='nota'?'block':'none'; document.getElementById('list-exp').style.display = t==='exp'?'block':'none'; document.getElementById('btn-nota').className = t==='nota'?'active':''; document.getElementById('btn-exp').className = t==='exp'?'active':''; }
+        async function editData(id, nama, target) { const n = prompt("Edit Nama:", nama); if(n) { await fetch(scriptURL, {method:'POST', body:JSON.stringify({action:'updateData', target, id, nama:n})}); loadDashboard(); } }
     </script>
 </body>
 </html>
