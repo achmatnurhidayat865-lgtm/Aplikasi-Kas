@@ -152,7 +152,7 @@
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw4QHwY4SZnbRQrmxk8GI8YqdtBo0gRMQG_9drmf32CPqCClABIZaPNHExek6nc1PuqOg/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbxr2oVhTTZgMTn5clwXEgp70S1RXULAeJA3iUk-kK9jAliVCh4DNdY34q-f-oVvyp7rVQ/exec';
 
     function tambahBaris() {
         const div = document.createElement('div');
@@ -187,11 +187,72 @@
         return t;
     }
 
-    async function simpanData(p) {
-        const t = 0; let total = 0; document.querySelectorAll('.item-row').forEach(r => total += (r.querySelector('.nq').value * r.querySelector('.nh').value || 0));
-        const items = Array.from(document.querySelectorAll('.item-row')).map(r => ({ n: r.querySelector('.nn').value, q: r.querySelector('.nq').value, h: r.querySelector('.nh').value }));
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: document.getElementById('cs').value, total: total, dp: document.getElementById('input_dp').value, metode: document.getElementById('metode').value, items: items }) });
-        alert("Simpan Berhasil!"); if(p) window.print(); location.reload();
+   async function simpanData(p) {
+        const csName = document.getElementById('cs').value;
+        const dpNominal = parseFloat(document.getElementById('input_dp').value) || 0;
+        let total = 0;
+        
+        // Ambil data items
+        const items = Array.from(document.querySelectorAll('.item-row')).map(r => {
+            const n = r.querySelector('.nn').value;
+            const q = parseFloat(r.querySelector('.nq').value) || 0;
+            const h = parseFloat(r.querySelector('.nh').value) || 0;
+            const sub = q * h;
+            total += sub;
+            return { n, q, h, sub };
+        });
+
+        // VALIDASI: Jangan simpan jika nama pelanggan kosong
+        if (!csName) { alert("Nama Pelanggan harus diisi!"); return; }
+
+        // PENGISIAN AREA CETAK (Hanya jika tombol Cetak ditekan)
+        if (p) {
+            document.getElementById('p_cs').innerText = csName;
+            document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
+            document.getElementById('p_total').innerText = "Rp " + total.toLocaleString();
+            document.getElementById('p_dp').innerText = "Rp " + dpNominal.toLocaleString();
+            document.getElementById('p_sisa').innerText = "Rp " + (total - dpNominal).toLocaleString();
+            
+            // Isi tabel item nota
+            document.getElementById('p_items').innerHTML = items.map(i => `
+                <tr>
+                    <td>${i.n}</td>
+                    <td align="center">${i.q}</td>
+                    <td align="right">${i.sub.toLocaleString()}</td>
+                </tr>
+            `).join("");
+        }
+
+        // KIRIM KE GOOGLE SHEETS
+        try {
+            const response = await fetch(webAppUrl, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    tipe: "Nota", 
+                    nama: csName, 
+                    total: total, 
+                    dp: dpNominal, 
+                    metode: document.getElementById('metode').value, 
+                    items: items 
+                }) 
+            });
+            
+            if (response.ok) {
+                if (p) {
+                    // Beri jeda sedikit agar DOM terupdate sebelum cetak
+                    setTimeout(() => {
+                        window.print();
+                        location.reload();
+                    }, 500);
+                } else {
+                    alert("Data Berhasil Disimpan!");
+                    location.reload();
+                }
+            }
+        } catch (error) {
+            alert("Gagal menyimpan data. Cek koneksi internet.");
+        }
+    }
     }
 
     async function simpanExp() {
