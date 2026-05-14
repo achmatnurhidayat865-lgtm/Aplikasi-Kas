@@ -60,8 +60,8 @@
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
         <div class="stat-card">BRI<br><b id="d_bri">0</b></div>
-        <div class="stat-card" style="background:var(--success)">Masuk Bln Ini<br><b id="d_masuk">0</b></div>
-        <div class="stat-card" style="background:var(--danger)">Keluar Bln Ini<br><b id="d_keluar">0</b></div>
+        <div class="stat-card" style="background:var(--success)">Masuk Bulan Ini<br><b id="d_masuk">0</b></div>
+        <div class="stat-card" style="background:var(--danger)">Keluar Bulan Ini<br><b id="d_keluar">0</b></div>
         <div class="stat-card" style="background:#f39c12">Piutang<br><b id="d_piutang">0</b></div>
         <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Laba Bersih: <b id="d_laba">0</b></div>
     </div>
@@ -86,6 +86,7 @@
         <select id="metode"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
         <button style="background:var(--primary)" onclick="simpanData(false)">SIMPAN</button>
         <button style="background:var(--success)" onclick="simpanData(true)">SIMPAN & CETAK</button>
+        <button style="background:#25D366" onclick="kirimEstimasiWA()">ESTIMASI KE WA</button>
     </div>
 
     <!-- FORM PENGELUARAN -->
@@ -113,7 +114,7 @@
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbwKM6JQrqPU4JtMejqH3UPvSLnLq05ANDogjye60NaUfI_sum53R9y-Exz1k6uYtxK1OQ/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbw2Mp8FUFDMCIpc3z3embMp5ll4jTdCeWEK0WhGN9WkFPLmntZxFEykl9e4dNRtDI-8Yw/exec';
     let dataNotaGlobal = [];
 
     function tambahBaris() {
@@ -147,6 +148,17 @@
         let t = 0; document.querySelectorAll('.exp-item-row').forEach(r => t += (parseFloat(r.querySelector('.eh').value) || 0));
         document.getElementById('txt_total_exp').innerText = "Rp " + t.toLocaleString();
         return t;
+    }
+
+    function kirimEstimasiWA() {
+        let total = 0; let msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${document.getElementById('cs').value}\n\n`;
+        document.querySelectorAll('.item-row').forEach((r, i) => {
+            const n = r.querySelector('.nn').value; const q = r.querySelector('.nq').value || 0; const h = r.querySelector('.nh').value || 0;
+            const sub = q * h; total += sub;
+            if(n) msg += `${i+1}. ${n} (${q}x${Number(h).toLocaleString()}) = Rp ${sub.toLocaleString()}\n`;
+        });
+        msg += `\n*Total: Rp ${total.toLocaleString()}*\n*DP 50%: Rp ${(total*0.5).toLocaleString()}*`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
     }
 
     async function simpanData(p) {
