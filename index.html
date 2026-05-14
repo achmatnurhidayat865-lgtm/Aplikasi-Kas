@@ -132,6 +132,7 @@
         document.getElementById('txt_sisa').innerText = (t - dp).toLocaleString();
     }
 
+    // --- PERBAIKAN UNTUK HP (SIMPAN & CETAK) ---
     async function simpanData(p) {
         let cs = document.getElementById('cs').value; if(!cs) return alert("Isi Nama Pelanggan!");
         let items = []; let total = 0;
@@ -140,10 +141,18 @@
             if(n) { items.push({n,q,h,sub:q*h}); total += (q*h); }
         });
         let dp = document.getElementById('input_dp').value || 0;
-        if(p) cetak(cs, items, total, dp, 0, "NOTA PEMESANAN");
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
-        if(p) { window.print(); }
-        location.reload();
+        
+        if(p) {
+            cetak(cs, items, total, dp, 0, "NOTA PEMESANAN");
+            setTimeout(async () => {
+                window.print();
+                await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
+                location.reload();
+            }, 600); // Jeda 0.6 detik agar data masuk ke HTML nota sebelum cetak
+        } else {
+            await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
+            location.reload();
+        }
     }
 
     function cetak(cs, items, total, dpSekarang, dpLama, judul) {
@@ -160,15 +169,20 @@
         document.getElementById('p_sisa').innerText = sisa <= 0 ? "0 (LUNAS)" : sisa.toLocaleString();
     }
 
+    // --- PERBAIKAN UNTUK HP (PELUNASAN) ---
     async function prosesPelunasan(id) {
         let n = dataNotaGlobal.find(x => x[0] == id);
         if(!n) return;
         let itms = []; try { itms = JSON.parse(n[2]); } catch(e) { itms = [{n: n[2], q: 1, sub: n[3]}]; }
         let total = Number(n[3]), dpAwal = Number(n[4]), sisaBayar = Number(n[5]);
+        
         cetak(n[1], itms, total, sisaBayar, dpAwal, "NOTA PELUNASAN");
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pelunasan", id: id }) });
-        window.print();
-        location.reload();
+        
+        setTimeout(async () => {
+            window.print();
+            await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pelunasan", id: id }) });
+            location.reload();
+        }, 600); // Jeda juga diberikan di sini
     }
 
     async function loadData() {
@@ -210,13 +224,12 @@
         location.reload();
     }
 
-    // PERBAIKAN: Menghitung DP 50% di WA
     function kirimEstimasiWA() {
         let cs = document.getElementById('cs').value;
         let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
         document.querySelectorAll('.item-row').forEach(r => {
             let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
-            if(n) { msg += `- ${n} (${q}x${h}) = ${q*h}\n`; t += (q*h); }
+            if(n) { msg += `- ${n} (${q}x${h}) = ${(q*h).toLocaleString()}\n`; t += (q*h); }
         });
         
         let dp = t * 0.5;
