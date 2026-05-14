@@ -205,16 +205,32 @@
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: document.getElementById('tf_d').value, ke: document.getElementById('tf_k').value, total: j }) });
         location.reload();
     }
-    function kirimEstimasiWA() {
-        let cs = document.getElementById('cs').value;
-        let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
-        document.querySelectorAll('.item-row').forEach(r => {
-            let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
-            if(n) { msg += `- ${n} (${q}x${h}) = ${q*h}\n`; t += (q*h); }
-        });
-        msg += `\n*Total Estimasi: Rp ${t.toLocaleString()}*`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
-    }
+    function kirimEstimasiWA() // GANTI FUNGSI LAMA DENGAN INI:
+function kirimEstimasiWA() {
+    let cs = document.getElementById('cs').value;
+    let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
+    
+    document.querySelectorAll('.item-row').forEach(r => {
+        let n = r.querySelector('.nn').value, 
+            q = r.querySelector('.nq').value, 
+            h = r.querySelector('.nh').value;
+        if(n) { 
+            msg += `- ${n} (${q}x${h}) = ${(q*h).toLocaleString()}\n`; 
+            t += (q*h); 
+        }
+    });
+    
+    // Perhitungan DP 50% untuk WA
+    let dp = t * 0.5;
+    let sisa = t - dp;
+
+    msg += `\n*Total: Rp ${t.toLocaleString()}*`;
+    msg += `\n*DP 50%: Rp ${dp.toLocaleString()}*`;
+    msg += `\n*Sisa: Rp ${sisa.toLocaleString()}*`;
+    msg += `\n\n_Harap konfirmasi jika setuju. Terima kasih!_`;
+    
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+}
 </script>
 </body>
 </html>
