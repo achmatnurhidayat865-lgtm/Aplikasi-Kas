@@ -40,7 +40,6 @@
 </div>
 
 <div class="no-print">
-    <!-- DASHBOARD PEMASUKAN & PENGELUARAN -->
     <div class="grid-dash">
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
@@ -182,7 +181,6 @@
         try {
             let res = await fetch(webAppUrl + "?action=getDashboard");
             let d = await res.json();
-            // UPDATE DASHBOARD BARU
             document.getElementById('d_cash').innerText = d.cash.toLocaleString();
             document.getElementById('d_bni').innerText = d.bni.toLocaleString();
             document.getElementById('d_bri').innerText = d.bri.toLocaleString();
@@ -191,8 +189,23 @@
             document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
             
             dataNotaGlobal = d.riwayatNota;
-            document.querySelector("#tabel_nota tbody").innerHTML = d.riwayatNota.map(r => `<tr><td>${r[1]}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[5]>0?`<button onclick="prosesPelunasan('${r[0]}')" style="background:var(--success); padding:3px; font-size:9px;">LUNASKAN</button>`:'LUNAS'}</td></tr>`).join("");
-            document.querySelector("#tabel_exp tbody").innerHTML = d.riwayatExp.map(e => `<tr><td>${new Date(e[0]).toLocaleDateString('id-ID')}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td></tr>`).join("");
+            
+            // Format Riwayat Nota
+            document.querySelector("#tabel_nota tbody").innerHTML = d.riwayatNota.map(r => {
+                let itemsText = ""; try { let parsed = JSON.parse(r[2]); itemsText = parsed.map(it => it.n).join(", "); } catch(e) { itemsText = r[2]; }
+                return `<tr><td><b>${r[1]}</b><br><small>${itemsText}</small></td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[5]>0?`<button onclick="prosesPelunasan('${r[0]}')" style="background:var(--success); padding:3px; font-size:9px;">LUNASKAN</button>`:'LUNAS'}</td></tr>`;
+            }).join("");
+
+            // PERBAIKAN TAMPILAN PENGELUARAN (Parsing JSON)
+            document.querySelector("#tabel_exp tbody").innerHTML = d.riwayatExp.map(e => {
+                let ket = "";
+                try {
+                    let parsed = JSON.parse(e[1]);
+                    ket = Array.isArray(parsed) ? parsed.map(p => p.n).join(", ") : e[1];
+                } catch(err) { ket = e[1]; }
+                return `<tr><td>${new Date(e[0]).toLocaleDateString('id-ID')}</td><td>${ket}</td><td>${Number(e[2]).toLocaleString()}</td></tr>`;
+            }).join("");
+
         } catch(e) { console.error("Gagal load data", e); }
     }
     window.onload = loadData;
