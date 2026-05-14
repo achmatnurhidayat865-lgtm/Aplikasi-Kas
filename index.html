@@ -9,7 +9,7 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; font-size: 13px; }
         .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
         .grid-dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .stat-card { background: var(--secondary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-size: 11px; }
+        .stat-card { background: var(--secondary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; }
         input, select, button { width: 100%; padding: 12px; margin: 4px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
         button { cursor: pointer; font-weight: bold; color: white; border: none; }
         .item-row { display: flex; gap: 5px; margin-bottom: 5px; }
@@ -24,7 +24,6 @@
 </head>
 <body>
 
-<!-- AREA CETAK NOTA -->
 <div id="area-cetak-nota">
     <center>
         <h2 style="margin:0;">ASHEEQA PRINTING</h2>
@@ -48,7 +47,6 @@
 </div>
 
 <div class="no-print">
-    <!-- DASHBOARD -->
     <div class="grid-dash">
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
@@ -56,9 +54,9 @@
         <div class="stat-card" style="background:var(--success)">Masuk (Bulan Ini)<br><b id="d_masuk">0</b></div>
         <div class="stat-card" style="background:var(--danger)">Keluar (Bulan Ini)<br><b id="d_keluar">0</b></div>
         <div class="stat-card" style="background:#8e44ad">Laba Bersih<br><b id="d_laba">0</b></div>
+        <div class="stat-card" style="background:#d35400; grid-column: span 3;">Total Piutang (Sisa di Pelanggan)<br><b id="d_piutang" style="font-size:14px;">0</b></div>
     </div>
 
-    <!-- INPUT NOTA BARU -->
     <div class="container">
         <h3>Input Nota Baru</h3>
         <input type="text" id="cs" placeholder="Nama Pelanggan">
@@ -80,7 +78,6 @@
         <button style="background:#25D366" onclick="kirimEstimasiWA()">KIRIM ESTIMASI WA</button>
     </div>
 
-    <!-- PENGELUARAN & PERALIHAN -->
     <div class="container" style="border-top:4px solid var(--danger)">
         <h4>Pengeluaran & Peralihan Dana</h4>
         <input type="text" id="ex_n" placeholder="Keperluan/Nama Barang">
@@ -99,7 +96,6 @@
         </div>
     </div>
 
-    <!-- RIWAYAT -->
     <div class="container">
         <h3>Riwayat Pemesanan</h3>
         <table id="tabel_nota"><thead><tr><th>Nama</th><th>Total</th><th>Sisa</th><th>Aksi</th></tr></thead><tbody></tbody></table>
@@ -139,10 +135,7 @@
             if(n) { items.push({n,q,h,sub:q*h}); total += (q*h); }
         });
         let dp = document.getElementById('input_dp').value || 0;
-        
-        // Panggilan cetak untuk Nota Baru (DP Lama = 0)
         if(p) cetak(cs, items, total, dp, 0, "NOTA PEMESANAN");
-        
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
         if(p) { window.print(); }
         location.reload();
@@ -153,15 +146,11 @@
         document.getElementById('p_cs').innerText = cs;
         document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
         document.getElementById('p_items').innerHTML = items.map(i => `<tr><td>${i.n}</td><td>${i.q}</td><td align="right">${Number(i.sub).toLocaleString()}</td></tr>`).join("");
-        
         document.getElementById('p_total').innerText = Number(total).toLocaleString();
         document.getElementById('p_dp_lama').innerText = Number(dpLama).toLocaleString();
         document.getElementById('p_dp').innerText = Number(dpSekarang).toLocaleString();
-        
-        // Sembunyikan label DP lama jika ini nota baru (DP 0) agar bersih
         document.getElementById('label_dp_lama').style.display = dpLama > 0 ? "inline" : "none";
         document.getElementById('p_dp_lama').style.display = dpLama > 0 ? "inline" : "none";
-        
         let sisa = total - dpLama - dpSekarang;
         document.getElementById('p_sisa').innerText = sisa <= 0 ? "0 (LUNAS)" : sisa.toLocaleString();
     }
@@ -169,43 +158,12 @@
     async function prosesPelunasan(id) {
         let n = dataNotaGlobal.find(x => x[0] == id);
         if(!n) return;
-        
         let itms = []; try { itms = JSON.parse(n[2]); } catch(e) { itms = [{n: n[2], q: 1, sub: n[3]}]; }
-        
-        let total = Number(n[3]);
-        let dpAwal = Number(n[4]);
-        let sisaBayar = Number(n[5]);
-
-        // Cetak dengan rincian DP yang sudah dibayar sebelumnya
+        let total = Number(n[3]), dpAwal = Number(n[4]), sisaBayar = Number(n[5]);
         cetak(n[1], itms, total, sisaBayar, dpAwal, "NOTA PELUNASAN");
-        
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pelunasan", id: id }) });
         window.print();
         location.reload();
-    }
-
-    async function simpanExp() {
-        let n = document.getElementById('ex_n').value, h = document.getElementById('ex_h').value;
-        if(!n || !h) return alert("Lengkapi data pengeluaran!");
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", items: [{n, h}], total: h, metode: document.getElementById('ex_m').value }) });
-        location.reload();
-    }
-
-    async function prosesAlih() {
-        let j = document.getElementById('tf_j').value; if(!j) return alert("Isi nominal transfer!");
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: document.getElementById('tf_d').value, ke: document.getElementById('tf_k').value, total: j }) });
-        location.reload();
-    }
-
-    function kirimEstimasiWA() {
-        let cs = document.getElementById('cs').value;
-        let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
-        document.querySelectorAll('.item-row').forEach(r => {
-            let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
-            if(n) { msg += `- ${n} (${q}x${h}) = ${q*h}\n`; t += (q*h); }
-        });
-        msg += `\n*Total Estimasi: Rp ${t.toLocaleString()}*`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
     }
 
     async function loadData() {
@@ -219,21 +177,44 @@
             document.getElementById('d_keluar').innerText = d.keluarBulanIni.toLocaleString();
             document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
             
-            dataNotaGlobal = d.riwayatNota;
+            // MENGHITUNG TOTAL PIUTANG DARI SEMUA SISA DI RIWAYAT
+            let totalPiutang = d.riwayatNota.reduce((acc, curr) => acc + Number(curr[5]), 0);
+            document.getElementById('d_piutang').innerText = totalPiutang.toLocaleString();
             
+            dataNotaGlobal = d.riwayatNota;
             document.querySelector("#tabel_nota tbody").innerHTML = d.riwayatNota.map(r => {
                 let itemsText = ""; try { let parsed = JSON.parse(r[2]); itemsText = parsed.map(it => it.n).join(", "); } catch(e) { itemsText = r[2]; }
                 return `<tr><td><b>${r[1]}</b><br><small>${itemsText}</small></td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[5]>0?`<button onclick="prosesPelunasan('${r[0]}')" style="background:var(--success); padding:3px; font-size:9px;">LUNASKAN</button>`:'LUNAS'}</td></tr>`;
             }).join("");
-
             document.querySelector("#tabel_exp tbody").innerHTML = d.riwayatExp.map(e => {
                 let ket = ""; try { let parsed = JSON.parse(e[1]); ket = Array.isArray(parsed) ? parsed.map(p => p.n).join(", ") : e[1]; } catch(err) { ket = e[1]; }
                 return `<tr><td>${new Date(e[0]).toLocaleDateString('id-ID')}</td><td>${ket}</td><td>${Number(e[2]).toLocaleString()}</td></tr>`;
             }).join("");
-
         } catch(e) { console.error("Gagal load data", e); }
     }
     window.onload = loadData;
+    
+    async function simpanExp() {
+        let n = document.getElementById('ex_n').value, h = document.getElementById('ex_h').value;
+        if(!n || !h) return alert("Lengkapi data pengeluaran!");
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", items: [{n, h}], total: h, metode: document.getElementById('ex_m').value }) });
+        location.reload();
+    }
+    async function prosesAlih() {
+        let j = document.getElementById('tf_j').value; if(!j) return alert("Isi nominal transfer!");
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: document.getElementById('tf_d').value, ke: document.getElementById('tf_k').value, total: j }) });
+        location.reload();
+    }
+    function kirimEstimasiWA() {
+        let cs = document.getElementById('cs').value;
+        let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
+        document.querySelectorAll('.item-row').forEach(r => {
+            let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
+            if(n) { msg += `- ${n} (${q}x${h}) = ${q*h}\n`; t += (q*h); }
+        });
+        msg += `\n*Total Estimasi: Rp ${t.toLocaleString()}*`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+    }
 </script>
 </body>
 </html>
