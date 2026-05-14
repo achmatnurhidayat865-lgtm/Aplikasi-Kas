@@ -9,17 +9,15 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; font-size: 13px; }
         .container { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
         .grid-dash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .stat-card { background: var(--secondary); color: white; padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-card { background: var(--secondary); color: white; padding: 10px; border-radius: 8px; text-align: center; font-size: 11px; }
         input, select, button { width: 100%; padding: 12px; margin: 4px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
         button { cursor: pointer; font-weight: bold; color: white; border: none; }
-        .item-row, .exp-item-row { border-bottom: 1px dashed #ddd; padding-bottom: 8px; margin-bottom: 8px; }
+        .item-row { display: flex; gap: 5px; margin-bottom: 5px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
-        
         @media print {
-            .no-print, button, .container, .grid-dash, h3, h4 { display: none !important; }
-            #area-cetak-nota { display: block !important; width: 100%; font-family: 'Courier New', Courier, monospace; }
-            body { background: white; }
+            .no-print { display: none !important; }
+            #area-cetak-nota { display: block !important; width: 100%; font-family: 'Courier New', monospace; }
         }
         #area-cetak-nota { display: none; }
     </style>
@@ -28,227 +26,174 @@
 
 <div id="area-cetak-nota">
     <center>
-        <h2 style="margin-bottom:5px;">ASHEEQA PRINTING</h2>
-        <p style="font-size:10px; margin:0;">Percetakan Undangan</p>
+        <h2 style="margin:0;">ASHEEQA PRINTING</h2>
         <p style="font-size:10px; margin:0;">Jl. Borong Raya 2 | 089699910769</p>
         <hr>
-        <h4 id="p_judul" style="margin:5px 0;">NOTA PEMESANAN</h4>
+        <h4 id="p_judul" style="margin:5px 0;">NOTA</h4>
     </center>
-    <p>Nama CS: <span id="p_cs"></span></p>
-    <p>Tanggal: <span id="p_tgl"></span></p>
-    <table style="width:100%; border-collapse: collapse; font-size:12px;">
-        <thead>
-            <tr style="border-bottom: 1px solid black;">
-                <th align="left">Item</th>
-                <th align="center">Qty</th>
-                <th align="right">Subtotal</th>
-            </tr>
-        </thead>
+    <p>Pelanggan: <span id="p_cs"></span><br>Tanggal: <span id="p_tgl"></span></p>
+    <table style="width:100%; border-bottom: 1px solid #000;">
+        <thead><tr><th>Item</th><th>Qty</th><th>Subtotal</th></tr></thead>
         <tbody id="p_items"></tbody>
     </table>
-    <hr>
-    <p align="right">Total: <b id="p_total"></b></p>
-    <p align="right">Bayar/DP: <b id="p_dp"></b></p>
-    <p align="right">Sisa: <b id="p_sisa"></b></p>
-    <center><p style="font-size:10px; margin-top:20px;">Terima kasih atas pesanan Anda!</p></center>
+    <p align="right">Total: <b id="p_total"></b><br>Bayar: <b id="p_dp"></b><br>Sisa: <b id="p_sisa"></b></p>
 </div>
 
 <div class="no-print">
+    <!-- DASHBOARD PEMASUKAN & PENGELUARAN -->
     <div class="grid-dash">
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
         <div class="stat-card">BRI<br><b id="d_bri">0</b></div>
-        <div class="stat-card" style="background:var(--success)">Masuk Bulan Ini<br><b id="d_masuk">0</b></div>
-        <div class="stat-card" style="background:var(--danger)">Keluar Bulan Ini<br><b id="d_keluar">0</b></div>
-        <div class="stat-card" style="background:#f39c12">Piutang<br><b id="d_piutang">0</b></div>
-        <div class="stat-card" style="background:#8e44ad; grid-column: span 3;">Laba Bersih: <b id="d_laba">0</b></div>
+        <div class="stat-card" style="background:var(--success)">Masuk (Bulan Ini)<br><b id="d_masuk">0</b></div>
+        <div class="stat-card" style="background:var(--danger)">Keluar (Bulan Ini)<br><b id="d_keluar">0</b></div>
+        <div class="stat-card" style="background:#8e44ad">Laba Bersih<br><b id="d_laba">0</b></div>
     </div>
 
     <div class="container">
-        <h3>Input Nota & Pemesanan</h3>
+        <h3>Input Nota Baru</h3>
         <input type="text" id="cs" placeholder="Nama Pelanggan">
         <div id="items-container">
             <div class="item-row">
-                <input type="text" class="nn" placeholder="Nama Barang">
-                <div style="display:flex; gap:5px;">
-                    <input type="number" class="nq" placeholder="Qty" oninput="updateOtomatis()">
-                    <input type="number" class="nh" placeholder="Harga Satuan" oninput="updateOtomatis()">
-                </div>
+                <input type="text" class="nn" placeholder="Barang" style="flex:2">
+                <input type="number" class="nq" placeholder="Qty" style="flex:1" oninput="updateOtomatis()">
+                <input type="number" class="nh" placeholder="Harga" style="flex:1" oninput="updateOtomatis()">
             </div>
         </div>
-        <button type="button" onclick="tambahBaris()" style="background:#eee; color:#333; margin: 10px 0;">+ Tambah Item Barang</button>
-        <p>Total Pesanan: <b id="txt_total">Rp 0</b></p>
-        <input type="number" id="input_dp" placeholder="Isi nominal bayar" oninput="hitungSisa()">
-        <p>Sisa Tagihan: <b id="txt_sisa">Rp 0</b></p>
+        <button onclick="tambahBaris()" style="background:#eee; color:#333;">+ Tambah Barang</button>
+        <p>Total: <b id="txt_total">0</b> | Sisa: <b id="txt_sisa">0</b></p>
+        <input type="number" id="input_dp" placeholder="Nominal Bayar/DP" oninput="hitungSisa()">
         <select id="metode"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
-        <button style="background:var(--primary)" onclick="simpanData(false)">SIMPAN</button>
-        <button style="background:var(--success)" onclick="simpanData(true)">SIMPAN & CETAK</button>
-        <button style="background:#25D366" onclick="kirimEstimasiWA()">ESTIMASI KE WA</button>
+        <div style="display:flex; gap:5px;">
+            <button style="background:var(--primary)" onclick="simpanData(false)">SIMPAN</button>
+            <button style="background:var(--success)" onclick="simpanData(true)">CETAK NOTA</button>
+        </div>
+        <button style="background:#25D366" onclick="kirimEstimasiWA()">KIRIM ESTIMASI WA</button>
     </div>
 
-    <div class="container" style="border-top: 4px solid var(--danger);">
-        <h4>Input Pengeluaran Multi-Item</h4>
-        <div id="exp-items-container">
-            <div class="exp-item-row">
-                <input type="text" class="en" placeholder="Nama Barang/Keperluan">
-                <input type="number" class="eh" placeholder="Biaya" oninput="hitungTotalExp()">
-            </div>
-        </div>
-        <button onclick="tambahItemExp()" style="background:#eee; color:#333; margin: 10px 0;">+ Tambah Item Pengeluaran</button>
-        <p>Total Pengeluaran: <b id="txt_total_exp">Rp 0</b></p>
+    <div class="container" style="border-top:4px solid var(--danger)">
+        <h4>Pengeluaran & Peralihan Dana</h4>
+        <input type="text" id="ex_n" placeholder="Keperluan/Nama Barang">
+        <input type="number" id="ex_h" placeholder="Biaya (Rp)">
         <select id="ex_m"><option value="Cash">Cash</option><option value="BNI">BNI</option><option value="BRI">BRI</option></select>
         <button style="background:var(--danger)" onclick="simpanExp()">SIMPAN PENGELUARAN</button>
-    </div>
-
-    <div class="container" style="border-top: 4px solid var(--warning);">
-        <h4>Peralihan Dana</h4>
-        <div style="display:flex; gap:5px;">
-            <select id="tf_d"><option value="Cash">Dari Cash</option><option value="BNI">Dari BNI</option><option value="BRI">Dari BRI</option></select>
-            <select id="tf_k"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Cash">Ke Cash</option></select>
+        <hr>
+        <div id="panel_alih">
+            <p>Transfer Saldo Antar Akun:</p>
+            <div style="display:flex; gap:5px;">
+                <select id="tf_d"><option value="Cash">Dari Cash</option><option value="BNI">Dari BNI</option><option value="BRI">Dari BRI</option></select>
+                <select id="tf_k"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Cash">Ke Cash</option></select>
+            </div>
+            <input type="number" id="tf_j" placeholder="Jumlah Transfer">
+            <button style="background:var(--warning); color:black;" onclick="prosesAlih()">PROSES PERALIHAN</button>
         </div>
-        <input type="number" id="tf_j" placeholder="Jumlah">
-        <button style="background:var(--warning); color:black;" onclick="prosesAlih()">PROSES PERALIHAN</button>
     </div>
 
     <div class="container">
         <h3>Riwayat Pemesanan</h3>
-        <table id="tabel_nota"><thead><tr><th>CS</th><th>Barang</th><th>Total</th><th>Bayar</th><th>Sisa</th><th>Aksi</th></tr></thead><tbody></tbody></table>
-        <h3 style="margin-top:20px;">Riwayat Pengeluaran</h3>
-        <table id="tabel_exp"><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Total</th><th>Metode</th></tr></thead><tbody></tbody></table>
+        <table id="tabel_nota"><thead><tr><th>Nama</th><th>Total</th><th>Sisa</th><th>Aksi</th></tr></thead><tbody></tbody></table>
+        <h3 style="margin-top:15px;">Riwayat Pengeluaran</h3>
+        <table id="tabel_exp"><thead><tr><th>Tgl</th><th>Keterangan</th><th>Total</th></tr></thead><tbody></tbody></table>
     </div>
 </div>
 
 <script>
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbwTZOg3-TWQMt63EqVGwi8xuj2lLuradGEWV7u5fWzdVTdQ8HFPwk2GNTR91PdgLgC01Q/exec';
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzR71ikbwM2001-aN-1AoMkf1chZd-0sDIWgRNUcUde9dnCRPGJSEUSjZoO8oX4lUVOLw/exec';
     let dataNotaGlobal = [];
 
     function tambahBaris() {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `<input type="text" class="nn" placeholder="Nama Barang"><div style="display:flex; gap:5px;"><input type="number" class="nq" placeholder="Qty" oninput="updateOtomatis()"><input type="number" class="nh" placeholder="Harga Satuan" oninput="updateOtomatis()"></div>`;
-        document.getElementById('items-container').appendChild(div);
-    }
-
-    function tambahItemExp() {
-        const div = document.createElement('div');
-        div.className = 'exp-item-row';
-        div.innerHTML = `<input type="text" class="en" placeholder="Nama Barang/Keperluan"><input type="number" class="eh" placeholder="Biaya" oninput="hitungTotalExp()">`;
-        document.getElementById('exp-items-container').appendChild(div);
+        let d = document.createElement('div'); d.className='item-row';
+        d.innerHTML = `<input type="text" class="nn" placeholder="Barang" style="flex:2"><input type="number" class="nq" placeholder="Qty" style="flex:1" oninput="updateOtomatis()"><input type="number" class="nh" placeholder="Harga" style="flex:1" oninput="updateOtomatis()">`;
+        document.getElementById('items-container').appendChild(d);
     }
 
     function updateOtomatis() {
         let t = 0; document.querySelectorAll('.item-row').forEach(r => t += (r.querySelector('.nq').value * r.querySelector('.nh').value || 0));
-        document.getElementById('txt_total').innerText = "Rp " + t.toLocaleString();
+        document.getElementById('txt_total').innerText = t.toLocaleString();
         document.getElementById('input_dp').value = t * 0.5;
         hitungSisa();
     }
 
     function hitungSisa() {
         let t = 0; document.querySelectorAll('.item-row').forEach(r => t += (r.querySelector('.nq').value * r.querySelector('.nh').value || 0));
-        const dp = parseFloat(document.getElementById('input_dp').value) || 0;
-        document.getElementById('txt_sisa').innerText = "Rp " + (t - dp).toLocaleString();
-    }
-
-    function hitungTotalExp() {
-        let t = 0; document.querySelectorAll('.exp-item-row').forEach(r => t += (parseFloat(r.querySelector('.eh').value) || 0));
-        document.getElementById('txt_total_exp').innerText = "Rp " + t.toLocaleString();
-        return t;
-    }
-
-    function kirimEstimasiWA() {
-        let total = 0; let msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${document.getElementById('cs').value}\n\n`;
-        document.querySelectorAll('.item-row').forEach((r, i) => {
-            const n = r.querySelector('.nn').value; const q = r.querySelector('.nq').value || 0; const h = r.querySelector('.nh').value || 0;
-            const sub = q * h; total += sub;
-            if(n) msg += `${i+1}. ${n} (${q}x${Number(h).toLocaleString()}) = Rp ${sub.toLocaleString()}\n`;
-        });
-        msg += `\n*Total: Rp ${total.toLocaleString()}*\n*DP 50%: Rp ${(total*0.5).toLocaleString()}*`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
+        let dp = document.getElementById('input_dp').value || 0;
+        document.getElementById('txt_sisa').innerText = (t - dp).toLocaleString();
     }
 
     async function simpanData(p) {
-        const csName = document.getElementById('cs').value;
-        const dpNominal = parseFloat(document.getElementById('input_dp').value) || 0;
-        let total = 0;
-        const items = Array.from(document.querySelectorAll('.item-row')).map(r => {
-            const n = r.querySelector('.nn').value;
-            const q = parseFloat(r.querySelector('.nq').value) || 0;
-            const h = parseFloat(r.querySelector('.nh').value) || 0;
-            const sub = q * h; total += sub; return { n, q, h, sub };
+        let cs = document.getElementById('cs').value; if(!cs) return alert("Isi Nama Pelanggan!");
+        let items = []; let total = 0;
+        document.querySelectorAll('.item-row').forEach(r => {
+            let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
+            if(n) { items.push({n,q,h,sub:q*h}); total += (q*h); }
         });
-        if (!csName) { alert("Nama Pelanggan wajib!"); return; }
-        if (p) {
-            document.getElementById('p_judul').innerText = "NOTA PEMESANAN";
-            document.getElementById('p_cs').innerText = csName;
-            document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
-            document.getElementById('p_total').innerText = "Rp " + total.toLocaleString();
-            document.getElementById('p_dp').innerText = "Rp " + dpNominal.toLocaleString();
-            document.getElementById('p_sisa').innerText = "Rp " + (total - dpNominal).toLocaleString();
-            document.getElementById('p_items').innerHTML = items.map(i => `<tr><td>${i.n}</td><td align="center">${i.q}</td><td align="right">${i.sub.toLocaleString()}</td></tr>`).join("");
-        }
-        const response = await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: csName, total: total, dp: dpNominal, metode: document.getElementById('metode').value, items: items }) });
-        if (response.ok) { if (p) { setTimeout(() => { window.print(); location.reload(); }, 500); } else { alert("Berhasil!"); location.reload(); } }
+        let dp = document.getElementById('input_dp').value || 0;
+        if(p) cetak(cs, items, total, dp, "NOTA PEMESANAN");
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
+        if(p) { window.print(); }
+        location.reload();
+    }
+
+    function cetak(cs, items, total, dp, judul) {
+        document.getElementById('p_judul').innerText = judul;
+        document.getElementById('p_cs').innerText = cs;
+        document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
+        document.getElementById('p_items').innerHTML = items.map(i => `<tr><td>${i.n}</td><td>${i.q}</td><td align="right">${Number(i.sub).toLocaleString()}</td></tr>`).join("");
+        document.getElementById('p_total').innerText = Number(total).toLocaleString();
+        document.getElementById('p_dp').innerText = Number(dp).toLocaleString();
+        document.getElementById('p_sisa').innerText = (total - dp).toLocaleString();
     }
 
     async function prosesPelunasan(id) {
-        if(!confirm("Lunasi & Cetak Bukti?")) return;
-        const nota = dataNotaGlobal.find(n => n[0] === id);
-        if(nota) {
-            document.getElementById('p_judul').innerText = "NOTA PELUNASAN";
-            document.getElementById('p_cs').innerText = nota[1];
-            document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
-            document.getElementById('p_total').innerText = "Rp " + Number(nota[3]).toLocaleString();
-            document.getElementById('p_dp').innerText = "Rp " + Number(nota[3]).toLocaleString();
-            document.getElementById('p_sisa').innerText = "Rp 0";
-            let itms = ""; try { itms = JSON.parse(nota[2]).map(i => `<tr><td>${i.n}</td><td align="center">${i.q}</td><td align="right">${Number(i.sub).toLocaleString()}</td></tr>`).join(""); } catch(e) { itms = `<tr><td>${nota[2]}</td><td>1</td><td>${Number(nota[3]).toLocaleString()}</td></tr>`; }
-            document.getElementById('p_items').innerHTML = itms;
-        }
+        let n = dataNotaGlobal.find(x => x[0] == id);
+        if(!n) return;
+        let itms = []; try { itms = JSON.parse(n[2]); } catch(e) { itms = [{n:n[2], q:1, sub:n[3]}]; }
+        cetak(n[1], itms, n[3], n[3], "NOTA PELUNASAN");
         await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pelunasan", id: id }) });
         window.print();
         location.reload();
     }
 
     async function simpanExp() {
-        const t = hitungTotalExp();
-        const items = Array.from(document.querySelectorAll('.exp-item-row')).map(r => ({ n: r.querySelector('.en').value, h: r.querySelector('.eh').value }));
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", items: items, total: t, metode: document.getElementById('ex_m').value }) });
-        alert("Pengeluaran Disimpan!"); location.reload();
+        let n = document.getElementById('ex_n').value, h = document.getElementById('ex_h').value;
+        if(!n || !h) return alert("Lengkapi data pengeluaran!");
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pengeluaran", items: [{n, h}], total: h, metode: document.getElementById('ex_m').value }) });
+        location.reload();
     }
 
     async function prosesAlih() {
-        const d = document.getElementById('tf_d').value; const k = document.getElementById('tf_k').value; const j = document.getElementById('tf_j').value;
-        if(!j) return alert("Isi jumlah!");
-        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: d, ke: k, total: j }) });
-        alert("Dana Berhasil Dialihkan!"); location.reload();
+        let j = document.getElementById('tf_j').value; if(!j) return alert("Isi nominal transfer!");
+        await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Peralihan", dari: document.getElementById('tf_d').value, ke: document.getElementById('tf_k').value, total: j }) });
+        location.reload();
     }
 
-    function renderTabel(nota, exp) {
-        dataNotaGlobal = nota;
-        document.querySelector("#tabel_nota tbody").innerHTML = nota.map(r => {
-            let brg = ""; try { brg = JSON.parse(r[2]).map(i => i.n).join(", "); } catch(e) { brg = r[2]; }
-            const sisa = Number(r[5]);
-            const btn = sisa > 0 ? `<button onclick="prosesPelunasan('${r[0]}')" style="background:var(--success); padding:3px;">LUNAS & CETAK</button>` : "LUNAS";
-            return `<tr><td>${r[1]}</td><td>${brg}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[4]).toLocaleString()}</td><td>${sisa.toLocaleString()}</td><td>${btn}</td></tr>`;
-        }).join("");
-        document.querySelector("#tabel_exp tbody").innerHTML = exp.map(e => {
-            let ket = ""; try { ket = JSON.parse(e[1]).map(i => i.n).join(", "); } catch(x) { ket = e[1]; }
-            return `<tr><td>${new Date(e[0]).toLocaleDateString()}</td><td>${ket}</td><td>${Number(e[2]).toLocaleString()}</td><td>${e[3]}</td></tr>`;
-        }).join("");
+    function kirimEstimasiWA() {
+        let cs = document.getElementById('cs').value;
+        let t = 0, msg = `*ESTIMASI ASHEEQA PRINTING*\nCS: ${cs}\n\n`;
+        document.querySelectorAll('.item-row').forEach(r => {
+            let n = r.querySelector('.nn').value, q = r.querySelector('.nq').value, h = r.querySelector('.nh').value;
+            if(n) { msg += `- ${n} (${q}x${h}) = ${q*h}\n`; t += (q*h); }
+        });
+        msg += `\n*Total Estimasi: Rp ${t.toLocaleString()}*`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
     }
 
     async function loadData() {
         try {
-            const res = await fetch(webAppUrl + "?action=getDashboard");
-            const d = await res.json();
+            let res = await fetch(webAppUrl + "?action=getDashboard");
+            let d = await res.json();
+            // UPDATE DASHBOARD BARU
             document.getElementById('d_cash').innerText = d.cash.toLocaleString();
             document.getElementById('d_bni').innerText = d.bni.toLocaleString();
             document.getElementById('d_bri').innerText = d.bri.toLocaleString();
             document.getElementById('d_masuk').innerText = d.masukBulanIni.toLocaleString();
             document.getElementById('d_keluar').innerText = d.keluarBulanIni.toLocaleString();
-            document.getElementById('d_piutang').innerText = d.piutang.toLocaleString();
             document.getElementById('d_laba').innerText = (d.masukBulanIni - d.keluarBulanIni).toLocaleString();
-            renderTabel(d.riwayatNota, d.riwayatExp);
-        } catch (e) { console.log(e); }
+            
+            dataNotaGlobal = d.riwayatNota;
+            document.querySelector("#tabel_nota tbody").innerHTML = d.riwayatNota.map(r => `<tr><td>${r[1]}</td><td>${Number(r[3]).toLocaleString()}</td><td>${Number(r[5]).toLocaleString()}</td><td>${r[5]>0?`<button onclick="prosesPelunasan('${r[0]}')" style="background:var(--success); padding:3px; font-size:9px;">LUNASKAN</button>`:'LUNAS'}</td></tr>`).join("");
+            document.querySelector("#tabel_exp tbody").innerHTML = d.riwayatExp.map(e => `<tr><td>${new Date(e[0]).toLocaleDateString('id-ID')}</td><td>${e[1]}</td><td>${Number(e[2]).toLocaleString()}</td></tr>`).join("");
+        } catch(e) { console.error("Gagal load data", e); }
     }
     window.onload = loadData;
 </script>
