@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asheeqa Printing</title>
+    <title>Asheeqa Printing - Dashboard</title>
     <style>
         :root { --primary: #2980b9; --secondary: #2c3e50; --success: #27ae60; --danger: #c0392b; --warning: #f1c40f; }
         body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; font-size: 13px; }
@@ -15,51 +15,100 @@
         .item-row { display: flex; gap: 5px; margin-bottom: 5px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 11px; }
         th, td { border: 1px solid #eee; padding: 8px; text-align: left; }
+        
+        /* DESAIN AREA CETAK NOTA */
+        #area-cetak-nota { display: none; }
         @media print {
             .no-print { display: none !important; }
-            #area-cetak-nota { display: block !important; width: 100%; font-family: 'Courier New', monospace; }
+            #area-cetak-nota { display: block !important; width: 100%; font-family: 'Segoe UI', sans-serif; background: white; }
+            body { background: white; }
+            .nota-wrapper { border: none !important; } /* Hilangkan border kotak saat print jika ingin lebih bersih */
         }
-        #area-cetak-nota { display: none; }
+        .nota-wrapper { border: 1.5px solid #333; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; background: white; }
+        .header-table { width: 100%; border-bottom: 3px double #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .logo-img { width: 65px; height: 65px; object-fit: contain; }
+        .logo-box { width: 60px; height: 60px; background: #2c3e50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
+        .p-judul { color: #2980b9; border: 2px solid #2980b9; padding: 4px 12px; border-radius: 4px; font-weight: bold; text-transform: uppercase; font-size: 14px; }
+        .table-pesanan { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .table-pesanan th { background: #f8f9fa; border: 1px solid #ccc; padding: 10px; font-weight: bold; }
+        .table-pesanan td { border: 1px solid #ccc; padding: 10px; }
     </style>
 </head>
 <body>
 
-<!-- AREA CETAK NOTA -->
 <div id="area-cetak-nota">
-    <center>
-        <h2 style="margin:0;">ASHEEQA PRINTING</h2>
-        <p style="font-size:10px; margin:0;">Jl. Borong Raya 2 | 089699910769</p>
-        <hr>
-        <h4 id="p_judul" style="margin:5px 0;">NOTA</h4>
-    </center>
-    <p>Pelanggan: <span id="p_cs"></span><br>Tanggal: <span id="p_tgl"></span></p>
-    <table style="width:100%; border-bottom: 1px solid #000;">
-        <thead><tr><th>Item</th><th>Qty</th><th>Subtotal</th></tr></thead>
-        <tbody id="p_items"></tbody>
-    </table>
-    <div id="p_rincian_bayar">
-        <p align="right">
-            Total: <b id="p_total"></b><br>
-            <span id="label_dp_lama">DP/Bayar Sebelumnya: </span><span id="p_dp_lama">0</span><br>
-            <span id="label_bayar_skrg">Bayar Sekarang: </span><b id="p_dp"></b><br>
-            Sisa: <b id="p_sisa"></b>
-        </p>
+    <div class="nota-wrapper">
+        <table class="header-table">
+            <tr>
+                <td style="width: 75px;">
+                   <img src="https://lh3.googleusercontent.com/u/0/d/1F055wulsiC-LDjW_NMZ4yXsMSCDj53TW" class="logo-img" onerror="this.style.display='none'; document.getElementById('alt-logo').style.display='flex';">
+                    <div id="alt-logo" class="logo-box" style="display:none;">A</div>
+                </td>
+                <td>
+                    <h2 style="margin:0; color: #2c3e50; font-size: 24px; letter-spacing: 1px;">ASHEEQA PRINTING</h2>
+                    <p style="font-size:11px; margin:3px 0; font-weight: bold; color: #2980b9;">Percetakan & Desain Undangan</p>
+                    <p style="font-size:10px; margin:0; color: #555;">Jl. Borong Raya 2 | WhatsApp: 089699910769</p>
+                </td>
+                <td style="text-align: right; vertical-align: middle;">
+                    <span id="p_judul" class="p-judul">NOTA</span>
+                </td>
+            </tr>
+        </table>
+
+        <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; padding: 0 5px;">
+            <div><b>Kepada Yth:</b><br><span id="p_cs" style="font-size: 14px; font-weight: bold; text-transform: uppercase;"></span></div>
+            <div style="text-align: right;"><b>Tanggal:</b><br><span id="p_tgl"></span></div>
+        </div>
+
+        <table class="table-pesanan">
+            <thead>
+                <tr>
+                    <th>Deskripsi Pesanan</th>
+                    <th style="width: 60px; text-align: center;">Qty</th>
+                    <th style="width: 120px; text-align: right;">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="p_items"></tbody>
+        </table>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+            <table style="width: 260px; font-size: 13px; line-height: 1.8;">
+                <tr>
+                    <td>Total Keseluruhan</td>
+                    <td style="text-align: right;">Rp <span id="p_total"></span></td>
+                </tr>
+                <tr id="row_dp_lama">
+                    <td>Uang Muka / Sebelumnya</td>
+                    <td style="text-align: right;">- Rp <span id="p_dp_lama"></span></td>
+                </tr>
+                <tr>
+                    <td style="border-top: 1px solid #333;"><b>Bayar Sekarang</b></td>
+                    <td style="text-align: right; border-top: 1px solid #333;"><b>Rp <span id="p_dp"></span></b></td>
+                </tr>
+                <tr style="font-size: 15px; color: #27ae60;">
+                    <td><b>Sisa Pelunasan</b></td>
+                    <td style="text-align: right;"><b>Rp <span id="p_sisa"></span></b></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px dashed #bbb; padding-top: 10px; font-size: 10px; text-align: center; color: #666; font-style: italic;">
+            "Terima kasih telah mempercayakan cetakan Anda kepada kami."
+        </div>
     </div>
 </div>
 
 <div class="no-print">
-    <!-- DASHBOARD -->
     <div class="grid-dash">
         <div class="stat-card">Cash<br><b id="d_cash">0</b></div>
         <div class="stat-card">BNI<br><b id="d_bni">0</b></div>
         <div class="stat-card">BRI<br><b id="d_bri">0</b></div>
-        <div class="stat-card" style="background:var(--success)">Masuk (Bulan Ini)<br><b id="d_masuk">0</b></div>
-        <div class="stat-card" style="background:var(--danger)">Keluar (Bulan Ini)<br><b id="d_keluar">0</b></div>
+        <div class="stat-card" style="background:var(--success)">Masuk (Bln Ini)<br><b id="d_masuk">0</b></div>
+        <div class="stat-card" style="background:var(--danger)">Keluar (Bln Ini)<br><b id="d_keluar">0</b></div>
         <div class="stat-card" style="background:#8e44ad">Laba Bersih<br><b id="d_laba">0</b></div>
         <div class="stat-card" style="background:#d35400; grid-column: span 3;">Total Piutang (Sisa di Pelanggan)<br><b id="d_piutang" style="font-size:14px;">0</b></div>
     </div>
 
-    <!-- INPUT NOTA BARU -->
     <div class="container">
         <h3>Input Nota Baru</h3>
         <input type="text" id="cs" placeholder="Nama Pelanggan">
@@ -81,7 +130,6 @@
         <button style="background:#25D366" onclick="kirimEstimasiWA()">KIRIM ESTIMASI WA</button>
     </div>
 
-    <!-- PENGELUARAN & PERALIHAN -->
     <div class="container" style="border-top:4px solid var(--danger)">
         <h4>Pengeluaran & Peralihan Dana</h4>
         <input type="text" id="ex_n" placeholder="Keperluan/Nama Barang">
@@ -100,7 +148,6 @@
         </div>
     </div>
 
-    <!-- RIWAYAT -->
     <div class="container">
         <h3>Riwayat Pemesanan</h3>
         <table id="tabel_nota"><thead><tr><th>Nama</th><th>Total</th><th>Sisa</th><th>Aksi</th></tr></thead><tbody></tbody></table>
@@ -132,7 +179,6 @@
         document.getElementById('txt_sisa').innerText = (t - dp).toLocaleString();
     }
 
-    // --- PERBAIKAN UNTUK HP (SIMPAN & CETAK) ---
     async function simpanData(p) {
         let cs = document.getElementById('cs').value; if(!cs) return alert("Isi Nama Pelanggan!");
         let items = []; let total = 0;
@@ -144,11 +190,12 @@
         
         if(p) {
             cetak(cs, items, total, dp, 0, "NOTA PEMESANAN");
+            // Jeda agar browser merender gambar & teks ke nota sebelum jendela print terbuka
             setTimeout(async () => {
                 window.print();
                 await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
-                location.reload();
-            }, 600); // Jeda 0.6 detik agar data masuk ke HTML nota sebelum cetak
+                setTimeout(() => { location.reload(); }, 1200); 
+            }, 1000);
         } else {
             await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Nota", nama: cs, total, dp, metode: document.getElementById('metode').value, items }) });
             location.reload();
@@ -158,18 +205,16 @@
     function cetak(cs, items, total, dpSekarang, dpLama, judul) {
         document.getElementById('p_judul').innerText = judul;
         document.getElementById('p_cs').innerText = cs;
-        document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID');
-        document.getElementById('p_items').innerHTML = items.map(i => `<tr><td>${i.n}</td><td>${i.q}</td><td align="right">${Number(i.sub).toLocaleString()}</td></tr>`).join("");
+        document.getElementById('p_tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+        document.getElementById('p_items').innerHTML = items.map(i => `<tr><td>${i.n}</td><td align="center">${i.q}</td><td align="right">${Number(i.sub).toLocaleString()}</td></tr>`).join("");
         document.getElementById('p_total').innerText = Number(total).toLocaleString();
         document.getElementById('p_dp_lama').innerText = Number(dpLama).toLocaleString();
         document.getElementById('p_dp').innerText = Number(dpSekarang).toLocaleString();
-        document.getElementById('label_dp_lama').style.display = dpLama > 0 ? "inline" : "none";
-        document.getElementById('p_dp_lama').style.display = dpLama > 0 ? "inline" : "none";
+        document.getElementById('row_dp_lama').style.display = dpLama > 0 ? "table-row" : "none";
         let sisa = total - dpLama - dpSekarang;
         document.getElementById('p_sisa').innerText = sisa <= 0 ? "0 (LUNAS)" : sisa.toLocaleString();
     }
 
-    // --- PERBAIKAN UNTUK HP (PELUNASAN) ---
     async function prosesPelunasan(id) {
         let n = dataNotaGlobal.find(x => x[0] == id);
         if(!n) return;
@@ -181,8 +226,8 @@
         setTimeout(async () => {
             window.print();
             await fetch(webAppUrl, { method: 'POST', body: JSON.stringify({ tipe: "Pelunasan", id: id }) });
-            location.reload();
-        }, 600); // Jeda juga diberikan di sini
+            setTimeout(() => { location.reload(); }, 1200);
+        }, 1000);
     }
 
     async function loadData() {
