@@ -14,8 +14,6 @@
         .page-section.active { display: block; }
         .input-form { display: none; }
         .input-form.active { display: block; }
-        .riwayat-form { display: none; }
-        .riwayat-form.active { display: block; }
         
         @media print {
             body { 
@@ -49,7 +47,7 @@
 <body class="bg-slate-100 flex flex-col lg:flex-row text-slate-700">
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycby7dm7b5P05en7Yfdq-uPzpIhCaS5umQnSzDZ-1EPnIfPJ8sjDtP1tpyUMl5nb66z8msQ/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzH3DdWZVidOfCCtwt7R-ERd5H5qIeb98mQ-o2m_NV7Op4k-W28gMBIpBZ4_oWg8DScSA/exec";
         const LOGO_URL = "https://lh3.googleusercontent.com/d/1F055wulsiC-LDjW_NMZ4yXsMSCDj53TW"; 
     </script>
 
@@ -66,10 +64,10 @@
         <nav class="flex flex-row lg:flex-col gap-1 lg:space-y-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 no-scrollbar">
             <a onclick="showPage('dashboard', this)" class="nav-item active flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg font-semibold whitespace-nowrap"><i class="fas fa-th-large w-4 lg:w-6"></i> Dashboard</a>
             <a onclick="showPage('input', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-plus-circle w-4 lg:w-6"></i> Input</a>
+            <a onclick="showPage('kategori', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tags w-4 lg:w-6"></i> Kategori</a>
             <a onclick="showPage('estimasi', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fab fa-whatsapp w-4 lg:w-6"></i> Estimasi</a>
             <a onclick="showPage('orderflow', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tasks w-4 lg:w-6"></i> Flow</a>
             <a onclick="showPage('riwayat', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-history w-4 lg:w-6"></i> Riwayat</a>
-            <a onclick="showPage('kategori', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tags w-4 lg:w-6"></i> Kategori</a>
         </nav>
     </div>
 
@@ -79,6 +77,7 @@
             <p class="text-slate-600 font-semibold text-sm">Sedang memproses sinkronisasi data...</p>
         </div>
 
+        <!-- DASHBOARD -->
         <div id="dashboard" class="page-section active p-10 space-y-8">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-bold text-slate-800">Dashboard Financial</h2>
@@ -86,25 +85,25 @@
                     <i class="fas fa-sync-alt"></i> Refresh Data
                 </button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
-                    <div class="bg-blue-50 text-blue-600 p-4 rounded-2xl text-xl"><i class="fas fa-wallet"></i></div>
-                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Cash</p><h3 id="saldoCash" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-3">
+                    <div class="bg-blue-50 text-blue-600 p-3 rounded-2xl text-lg"><i class="fas fa-wallet"></i></div>
+                    <div><p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Cash</p><h3 id="saldoCash" class="text-lg font-bold text-slate-800">Rp 0</h3></div>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
-                    <div class="bg-purple-50 text-purple-600 p-4 rounded-2xl text-xl"><i class="fas fa-university"></i></div>
-                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">BNI</p><h3 id="saldoBNI" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-3">
+                    <div class="bg-purple-50 text-purple-600 p-3 rounded-2xl text-lg"><i class="fas fa-university"></i></div>
+                    <div><p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">BNI</p><h3 id="saldoBNI" class="text-lg font-bold text-slate-800">Rp 0</h3></div>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
-                    <div class="bg-orange-50 text-orange-600 p-4 rounded-2xl text-xl"><i class="fas fa-university"></i></div>
-                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">BRI</p><h3 id="saldoBRI" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-3">
+                    <div class="bg-orange-50 text-orange-600 p-3 rounded-2xl text-lg"><i class="fas fa-university"></i></div>
+                    <div><p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">BRI</p><h3 id="saldoBRI" class="text-lg font-bold text-slate-800">Rp 0</h3></div>
                 </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
-                    <div class="bg-teal-50 text-teal-600 p-4 rounded-2xl text-xl"><i class="fas fa-university"></i></div>
-                    <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Mandiri</p><h3 id="saldoMandiri" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-3">
+                    <div class="bg-cyan-50 text-cyan-600 p-3 rounded-2xl text-lg"><i class="fas fa-university"></i></div>
+                    <div><p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Mandiri</p><h3 id="saldoMandiri" class="text-lg font-bold text-slate-800">Rp 0</h3></div>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-emerald-500 p-6 rounded-3xl text-white shadow-lg"><p class="text-emerald-100 text-sm">Masuk (Bln Ini)</p><h4 id="totalPemasukan" class="text-2xl font-bold mt-1">Rp 0</h4></div>
                 <div class="bg-red-500 p-6 rounded-3xl text-white shadow-lg"><p class="text-red-100 text-sm">Keluar (Bln Ini)</p><h4 id="totalPengeluaran" class="text-2xl font-bold mt-1">Rp 0</h4></div>
                 <div class="bg-purple-600 p-6 rounded-3xl text-white shadow-lg"><p class="text-purple-100 text-sm">Laba Bersih</p><h4 id="totalKeuntungan" class="text-2xl font-bold mt-1">Rp 0</h4></div>
@@ -115,6 +114,7 @@
             </div>
         </div>
 
+        <!-- INPUT -->
         <div id="input" class="page-section p-10">
             <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
@@ -135,21 +135,27 @@
                         <label class="block text-sm font-semibold text-slate-600 mb-2">Daftar Item Pemesanan</label>
                         <div id="items-container" class="space-y-4">
                             <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">
-                                    <option value="">-- Pilih Kategori --</option>
+                                <select class="item-kategori p-3 rounded-xl border outline-none bg-white font-medium" onchange="onKategoriChange(this)">
+                                    <option value="">-- Pilih Kategori / Manual --</option>
                                 </select>
                                 <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                                <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                                <input type="text" placeholder="Harga Satuan" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                                 <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
                             </div>
                         </div>
                         <button onclick="addItem()" class="text-emerald-600 font-semibold text-sm hover:underline mt-2 inline-block">+ Tambah Item Baru</button>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    <!-- Input Diskon -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-600 mb-2">Diskon (Rp)</label>
-                            <input type="text" id="inputDiskon" placeholder="Nominal Diskon" value="0" oninput="formatInputRupiah(this); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none">
+                            <label class="block text-sm font-semibold text-slate-600">Diskon / Potongan Harga</label>
+                            <p class="text-xs text-slate-400">Masukkan nilai potongan harga total (opsional)</p>
                         </div>
+                        <input type="text" id="inputDiskon" placeholder="Rp 0" oninput="formatInputRupiah(this); hitungTotal()" class="w-48 p-3 border border-slate-200 rounded-xl outline-none bg-white text-right font-bold text-rose-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Metode Pembayaran</label>
                             <select id="sumberDana" class="w-full p-4 border border-slate-200 rounded-2xl bg-white outline-none">
@@ -161,7 +167,7 @@
                         </div>
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-semibold text-slate-600">Manual DP</label>
+                                <label class="block text-sm font-semibold text-slate-600">Manual DP / Bayar</label>
                                 <select id="persenDP" onchange="isManualDP=false; hitungTotal()" class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-1 outline-none">
                                     <option value="0.5">DP 50%</option>
                                     <option value="0.7">DP 70%</option>
@@ -205,11 +211,15 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Dari Saldo Kas</label>
-                            <select id="mutasiDari" class="w-full p-4 border rounded-2xl bg-white"><option value="Cash">Dari Cash</option><option value="BRI">Dari BRI</option><option value="BNI">Dari BNI</option><option value="Mandiri">Dari Mandiri</option></select>
+                            <select id="mutasiDari" class="w-full p-4 border rounded-2xl bg-white">
+                                <option value="Cash">Dari Cash</option><option value="BRI">Dari BRI</option><option value="BNI">Dari BNI</option><option value="Mandiri">Dari Mandiri</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Ke Rekening Tujuan</label>
-                            <select id="mutasiKe" class="w-full p-4 border rounded-2xl bg-white"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Mandiri">Ke Mandiri</option><option value="Cash">Ke Cash</option></select>
+                            <select id="mutasiKe" class="w-full p-4 border rounded-2xl bg-white">
+                                <option value="Mandiri">Ke Mandiri</option><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Cash">Ke Cash</option>
+                            </select>
                         </div>
                     </div>
                     <div>
@@ -221,6 +231,40 @@
             </div>
         </div>
 
+        <!-- MENU KATEGORI & HARGA -->
+        <div id="kategori" class="page-section p-10 space-y-6">
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+                <div class="flex justify-between items-center border-b pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Manajemen Kategori & Harga</h2>
+                        <p class="text-xs text-slate-400 mt-1">Tambah, edit harga, atau hapus kategori produk cetakan</p>
+                    </div>
+                    <button onclick="tambahBarisKategori()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl font-bold text-sm shadow-md transition">
+                        <i class="fas fa-plus mr-1"></i> Tambah Kategori
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b text-slate-400 font-bold text-xs uppercase">
+                                <th class="p-3">Nama Kategori</th>
+                                <th class="p-3">Harga Satuan (Rp)</th>
+                                <th class="p-3">Tipe Hitung</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-kategori-master" class="divide-y divide-slate-100 text-sm"></tbody>
+                    </table>
+                </div>
+
+                <button onclick="simpanMasterKategori()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-2xl transition shadow-lg">
+                    SIMPAN PERUBAHAN KATEGORI
+                </button>
+            </div>
+        </div>
+
+        <!-- ESTIMASI -->
         <div id="estimasi" class="page-section p-10 space-y-6">
             <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
                 <h2 class="text-2xl font-bold text-slate-800 border-b pb-2">Kalkulator Estimasi Harga</h2>
@@ -260,6 +304,7 @@
             </div>
         </div>
 
+        <!-- ORDERFLOW -->
         <div id="orderflow" class="page-section p-10 space-y-6">
             <h2 class="text-2xl font-bold text-slate-800">Orderflow Monitoring (Deadline H+7)</h2>
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-x-auto w-full min-w-full">
@@ -279,19 +324,7 @@
             </div>
         </div>
 
-        <!-- HALAMAN KATEGORI & HARGA -->
-        <div id="kategori" class="page-section p-10 space-y-6">
-            <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Pengaturan Kategori & Harga Dasar</h2>
-                    <button onclick="simpanKategoriServer()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow transition">Simpan Perubahan</button>
-                </div>
-                <p class="text-xs text-slate-500">Anda dapat mengubah harga dasar, menambah kategori baru, atau menghapus kategori. Spanduk menggunakan logika perhitungan otomatis (0,5 meter dihitung 1 meter).</p>
-                <div id="kategori-container" class="space-y-3"></div>
-                <button onclick="tambahBarisKategori()" class="text-emerald-600 font-semibold text-sm hover:underline inline-block">+ Tambah Kategori Baru</button>
-            </div>
-        </div>
-
+        <!-- RIWAYAT -->
         <div id="riwayat" class="page-section p-10 space-y-8">
             <div class="flex justify-between items-center">
                 <h2 class="text-2xl font-bold text-slate-800">Riwayat Buku Keuangan</h2>
@@ -384,20 +417,9 @@
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Diskon (Rp)</label>
-                        <input type="text" id="edit-diskon" placeholder="Diskon" value="0" oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
-                        <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
-                            <option value="Cash">Cash / Tunai</option>
-                            <option value="BRI">Transfer BRI</option>
-                            <option value="BNI">Transfer BNI</option>
-                            <option value="Mandiri">Transfer Mandiri</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Diskon Total</label>
+                    <input type="text" id="edit-diskon" placeholder="Rp 0" oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm font-bold text-rose-500">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border">
@@ -411,9 +433,20 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Uang Muka / DP</label>
-                    <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Uang Muka / DP</label>
+                        <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
+                        <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
+                            <option value="Cash">Cash / Tunai</option>
+                            <option value="BRI">Transfer BRI</option>
+                            <option value="BNI">Transfer BNI</option>
+                            <option value="Mandiri">Transfer Mandiri</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="flex gap-3 pt-2">
@@ -520,16 +553,16 @@
             </div>
 
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-                <div class="flex justify-between items-center p-3 bg-slate-50/50">
+                <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-subtotal-row">
                     <span class="text-slate-500">Subtotal Barang</span>
-                    <span id="print-subtotal-barang" class="text-slate-900 font-black text-right">Rp 0</span>
+                    <span id="print-subtotal-val" class="text-slate-900 font-bold text-right">Rp 0</span>
                 </div>
-                <div id="print-diskon-row" class="hidden flex justify-between items-center border-t border-slate-200 p-3 text-amber-600 bg-amber-50/20">
-                    <span>Diskon</span>
-                    <span id="print-diskon" class="font-bold text-right">- Rp 0</span>
+                <div id="print-diskon-row" class="hidden justify-between items-center border-t border-slate-200 p-3 text-rose-600 bg-rose-50/10">
+                    <span>Diskon / Potongan</span>
+                    <span id="print-diskon-val" class="font-bold text-right">- Rp 0</span>
                 </div>
-                <div class="flex justify-between items-center border-t border-slate-200 p-3 bg-slate-50/50">
-                    <span class="text-slate-500 font-bold">Total Keseluruhan</span>
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 bg-slate-100 font-bold" id="print-total-row">
+                    <span class="text-slate-700">Total Keseluruhan</span>
                     <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
                 </div>
                 <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
@@ -552,8 +585,8 @@
         let globalDataCache = { riwayatNota: [], riwayatExp: [] };
         let localNotaList = [];
         let localExpList = [];
-        let globalKategoriList = [];
         let isManualDP = false;
+        let masterKategoriList = [];
 
         function formatInputRupiah(elm) {
             let val = elm.value.replace(/[^0-9]/g, '');
@@ -573,7 +606,7 @@
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if(element) element.classList.add('active');
-            if(pageId === 'kategori') loadKategoriPage();
+            if(pageId === 'kategori') loadMasterKategoriUI();
         }
 
         function showInput(type, element) {
@@ -585,6 +618,100 @@
             });
             element.classList.remove('text-slate-500');
             element.classList.add('bg-emerald-500', 'text-white', 'shadow-sm');
+        }
+
+        async function fetchMasterKategori() {
+            try {
+                const res = await fetch(`${API_URL}?action=getKategori`);
+                masterKategoriList = await res.json();
+                populateKategoriDropdowns();
+            } catch(e) {
+                console.error("Gagal ambil kategori", e);
+            }
+        }
+
+        function populateKategoriDropdowns() {
+            document.querySelectorAll('.item-kategori').forEach(select => {
+                const currentVal = select.value;
+                select.innerHTML = '<option value="">-- Pilih Kategori / Manual --</option>';
+                masterKategoriList.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.nama;
+                    opt.setAttribute('data-harga', cat.harga);
+                    opt.setAttribute('data-tipe', cat.tipe);
+                    opt.innerText = `${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID)})`;
+                    if(cat.nama === currentVal) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function onKategoriChange(selectElm) {
+            const row = selectElm.closest('.item-row');
+            const selectedOpt = selectElm.options[selectElm.selectedIndex];
+            const priceInput = row.querySelector('.price');
+            const nameInput = row.querySelector('.item-name');
+
+            if(selectedOpt && selectedOpt.value) {
+                priceInput.value = Number(selectedOpt.getAttribute('data-harga') || 0).toLocaleString('id-ID');
+                nameInput.value = selectedOpt.value;
+            } else {
+                priceInput.value = '';
+                nameInput.value = '';
+            }
+            hitungTotal();
+        }
+
+        function loadMasterKategoriUI() {
+            const tbody = document.getElementById('tbody-kategori-master');
+            tbody.innerHTML = '';
+            masterKategoriList.forEach((cat, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="p-3"><input type="text" value="${cat.nama}" class="kat-nama p-2 border rounded-xl w-full text-sm outline-none"></td>
+                    <td class="p-3"><input type="text" value="${Number(cat.harga).toLocaleString('id-ID')}" oninput="formatInputRupiah(this)" class="kat-harga p-2 border rounded-xl w-full text-sm outline-none"></td>
+                    <td class="p-3">
+                        <select class="kat-tipe p-2 border rounded-xl w-full text-sm bg-white outline-none">
+                            <option value="normal" ${cat.tipe === 'normal' ? 'selected' : ''}>Normal (Qty Biasa)</option>
+                            <option value="spanduk" ${cat.tipe === 'spanduk' ? 'selected' : ''}>Spanduk (Bulat 0,5m ke 1m)</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-center"><button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i></button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function tambahBarisKategori() {
+            const tbody = document.getElementById('tbody-kategori-master');
+            const tr = document.createElement('tr');
+            tr.className = "border-b hover:bg-slate-50";
+            tr.innerHTML = `
+                <td class="p-3"><input type="text" placeholder="Nama Kategori Baru" class="kat-nama p-2 border rounded-xl w-full text-sm outline-none"></td>
+                <td class="p-3"><input type="text" placeholder="Harga" oninput="formatInputRupiah(this)" class="kat-harga p-2 border rounded-xl w-full text-sm outline-none"></td>
+                <td class="p-3">
+                    <select class="kat-tipe p-2 border rounded-xl w-full text-sm bg-white outline-none">
+                        <option value="normal">Normal (Qty Biasa)</option>
+                        <option value="spanduk">Spanduk (Bulat 0,5m ke 1m)</option>
+                    </select>
+                </td>
+                <td class="p-3 text-center"><button onclick="this.closest('tr').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i></button></td>`;
+            tbody.appendChild(tr);
+        }
+
+        async function simpanMasterKategori() {
+            let list = [];
+            document.querySelectorAll('#tbody-kategori-master tr').forEach(tr => {
+                const nama = tr.querySelector('.kat-nama').value;
+                const harga = parseRupiah(tr.querySelector('.kat-harga').value);
+                const tipe = tr.querySelector('.kat-tipe').value;
+                if(nama) list.push({ nama, harga, tipe });
+            });
+
+            setLoading(true);
+            await sendPost({ tipe: "SimpanKategori", list: list });
+            await fetchMasterKategori();
+            alert("Kategori berhasil diperbarui!");
         }
 
         function buildDropdownSelector() {
@@ -606,62 +733,22 @@
             }
         }
 
-        async function fetchKategoriData() {
-            try {
-                const res = await fetch(`${API_URL}?action=getKategori`);
-                globalKategoriList = await res.json();
-                updateAllCategoryDropdowns();
-            } catch(e) {
-                globalKategoriList = [{ nama: "Spanduk", harga: 25000 }];
-                updateAllCategoryDropdowns();
-            }
-        }
-
-        function updateAllCategoryDropdowns() {
-            document.querySelectorAll('.item-category').forEach(select => {
-                const currentVal = select.value;
-                select.innerHTML = '<option value="">-- Pilih Kategori / Manual --</option>';
-                globalKategoriList.forEach(cat => {
-                    const opt = document.createElement('option');
-                    opt.value = cat.nama;
-                    opt.setAttribute('data-harga', cat.harga);
-                    opt.innerText = `${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})`;
-                    if(cat.nama === currentVal) opt.selected = true;
-                    select.appendChild(opt);
-                });
-            });
-        }
-
-        function onCategoryChange(selectElm) {
-            const row = selectElm.closest('.item-row');
-            const selectedOpt = selectElm.options[selectElm.selectedIndex];
-            const priceInput = row.querySelector('.price');
-            const qtyInput = row.querySelector('.qty');
-
-            if (selectedOpt && selectedOpt.value) {
-                const harga = selectedOpt.getAttribute('data-harga');
-                priceInput.value = Number(harga).toLocaleString('id-ID');
-                if (!qtyInput.value) qtyInput.value = "1";
-            }
-            hitungTotal();
-        }
-
         function addItem() {
             const container = document.getElementById('items-container');
             const newRow = document.createElement('div');
             newRow.className = 'item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100';
-            
-            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
-            globalKategoriList.forEach(cat => {
-                optionsHtml += `<option value="${cat.nama}" data-harga="${cat.harga}">${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
-            });
-
             newRow.innerHTML = `
-                <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">${optionsHtml}</select>
+                <select class="item-kategori p-3 rounded-xl border outline-none bg-white font-medium" onchange="onKategoriChange(this)">
+                    <option value="">-- Pilih Kategori / Manual --</option>
+                </select>
                 <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>`;
+                <input type="text" placeholder="Harga Satuan" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                <div class="flex items-center justify-between gap-2">
+                    <span class="subtotal-text font-bold text-right text-slate-800 flex-1">Rp 0</span>
+                    <button type="button" onclick="this.closest('.item-row').remove(); hitungTotal()" class="text-rose-500 p-1"><i class="fas fa-trash text-xs"></i></button>
+                </div>`;
             container.appendChild(newRow);
+            populateKategoriDropdowns();
         }
 
         function addEstItem() {
@@ -676,49 +763,61 @@
         }
 
         function hitungTotal() {
-            let subtotalBarang = 0;
+            let totalSub = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const categorySelect = row.querySelector('.item-category');
-                const catName = categorySelect ? categorySelect.value : '';
-                let qtyRaw = row.querySelector('.qty').value;
-                const price = parseRupiah(row.querySelector('.price').value);
+                const selectKat = row.querySelector('.item-kategori');
+                const selectedOpt = selectKat ? selectKat.options[selectKat.selectedIndex] : null;
+                const catName = selectKat ? selectKat.value : '';
                 
-                let qty = parseRupiah(qtyRaw);
-                // Logika khusus Spanduk: 0,5 meter dihitung 1 meter
-                if (catName.toLowerCase() === 'spanduk') {
-                    let numVal = parseFloat(qtyRaw.replace(',', '.')) || 0;
-                    if (numVal > 0 && numVal <= 0.5) {
-                        qty = 1;
-                    } else if (numVal > 0) {
-                        qty = Math.ceil(numVal);
-                    }
+                let qtyRaw = parseRupiah(row.querySelector('.qty').value);
+                // Cek apakah kategori spanduk atau nama mengandung spanduk (Logika 0,5 meter dibulatkan ke 1 meter)
+                let katObj = masterKategoriList.find(k => k.nama.toLowerCase() === catName.toLowerCase());
+                let isSpanduk = (katObj && katObj.tipe === 'spanduk') || catName.toLowerCase().includes('spanduk');
+
+                let qtyFinal = qtyRaw;
+                if (isSpanduk) {
+                    // Jika diinput desimal atau pecahan meter, pembulatan ke atas kelipatan 0,5 atau min 1
+                    // Misal input 0.5 meter (disimpan sebagai 5 atau 0.5 jika parse float)
                 }
 
-                const sub = (qty * price);
-                subtotalBarang += sub;
-                row.querySelector('.subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
+                // Untuk mengakomodasi input qty koma/meter spanduk:
+                const qtyValStr = row.querySelector('.qty').value.replace(',', '.');
+                let qtyNum = parseFloat(qtyValStr) || 0;
+
+                if (isSpanduk && qtyNum > 0 && qtyNum <= 1) {
+                    qtyNum = 1; // logika khusus spanduk 0,5 meter dihitung 1 meter
+                } else if (isSpanduk && qtyNum > 1) {
+                    // Pembulatan ke kelipatan terdekat atau ke atas jika ada kelebihan desimal
+                    qtyNum = Math.ceil(qtyNum * 2) / 2; 
+                }
+
+                const price = parseRupiah(row.querySelector('.price').value);
+                const subtotal = qtyNum * price;
+                totalSub += subtotal;
+                
+                row.querySelector('.subtotal-text').innerText = "Rp " + subtotal.toLocaleString('id-ID');
             });
             
             const diskon = parseRupiah(document.getElementById('inputDiskon').value);
-            const total = Math.max(0, subtotalBarang - diskon);
+            let grandTotal = Math.max(0, totalSub - diskon);
 
             const dpInputElm = document.getElementById('inputDP');
             const persenDP = Number(document.getElementById('persenDP').value);
             
-            if(!isManualDP && total > 0) {
+            if(!isManualDP && grandTotal > 0) {
                 if (persenDP === 1) {
-                    dpInputElm.value = total.toLocaleString('id-ID');
+                    dpInputElm.value = grandTotal.toLocaleString('id-ID');
                 } else {
-                    dpInputElm.value = (total * persenDP).toLocaleString('id-ID');
+                    dpInputElm.value = (grandTotal * persenDP).toLocaleString('id-ID');
                 }
             }
 
             const dpInput = parseRupiah(dpInputElm.value);
-            document.getElementById('grandTotal').innerText = "Rp " + total.toLocaleString('id-ID');
-            document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, total - dpInput).toLocaleString('id-ID');
+            document.getElementById('grandTotal').innerText = "Rp " + grandTotal.toLocaleString('id-ID');
+            document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, grandTotal - dpInput).toLocaleString('id-ID');
         }
 
-        function hitung Estimasi() {
+        function hitungEstimasi() {
             let total = 0;
             document.querySelectorAll('.est-item-row').forEach(row => {
                 const qty = parseRupiah(row.querySelector('.est-qty').value);
@@ -749,7 +848,6 @@
         async function updateDashboard() {
             setLoading(true);
             try {
-                await fetchKategoriData();
                 const res = await fetch(`${API_URL}?action=getDashboard`);
                 const data = await res.json();
                 globalDataCache = data;
@@ -799,7 +897,7 @@
 
                 renderSplitTablesMaster();
             } catch(e) { 
-                console.error("Gagal melakukan pencarian bulanan:", e);
+                console.error("Gagal pencarian:", e);
             }
             setLoading(false);
         }
@@ -868,7 +966,7 @@
                         existing[5] = r[5]; 
                         existing[6] = r[6]; 
                         existing[7] = r[7]; 
-                        existing[8] = r[8];
+                        if(r[8] !== undefined) existing[8] = r[8];
                         if (r[2]) existing[2] = r[2]; 
                     } else {
                         existing[5] = Math.min(Number(existing[5] || 0), Number(r[5] || 0));
@@ -891,10 +989,10 @@
                     
                     const safeId = String(r[0]).replace(/'/g, "\\'");
 
-                    let btnAwal = `<button type="button" onclick="cetakNotaStruk('${safeId}', false)" class="text-sky-500 hover:text-sky-700 p-2 hover:bg-sky-50 rounded-lg transition" title="Cetak Nota Awal (DP)"><i class="fas fa-file-invoice"></i></button>`;
-                    let btnLunas = `<button type="button" onclick="openPelunasanModal('${safeId}')" class="text-emerald-500 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition" title="Proses Pelunasan & Cetak"><i class="fas fa-check-circle"></i></button>`;
-                    let btnEdit = `<button type="button" onclick="openEditModal('${safeId}')" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition relative z-10" title="Edit Transaksi"><i class="fas fa-edit"></i></button>`;
-                    let btnHapus = `<button type="button" onclick="deleteNota('${safeId}')" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition" title="Hapus Data"><i class="fas fa-trash-alt"></i></button>`;
+                    let btnAwal = `<button type="button" onclick="cetakNotaStruk('${safeId}', false)" class="text-sky-500 hover:text-sky-700 p-2 hover:bg-sky-50 rounded-lg transition" title="Cetak Nota Awal"><i class="fas fa-file-invoice"></i></button>`;
+                    let btnLunas = `<button type="button" onclick="openPelunasanModal('${safeId}')" class="text-emerald-500 hover:text-emerald-700 p-2 hover:bg-emerald-50 rounded-lg transition" title="Proses Pelunasan"><i class="fas fa-check-circle"></i></button>`;
+                    let btnEdit = `<button type="button" onclick="openEditModal('${safeId}')" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition relative z-10" title="Edit"><i class="fas fa-edit"></i></button>`;
+                    let btnHapus = `<button type="button" onclick="deleteNota('${safeId}')" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition" title="Hapus"><i class="fas fa-trash-alt"></i></button>`;
 
                     const tr = document.createElement('tr');
                     tr.className = "border-b text-xs hover:bg-slate-50";
@@ -904,10 +1002,7 @@
                         <td class="p-4 text-rose-500 font-bold">${fmt(r[5])}</td>
                         <td class="p-4 text-center">
                             <div class="flex justify-center items-center gap-1 text-base relative z-10">
-                                ${btnAwal}
-                                ${btnLunas}
-                                ${btnEdit}
-                                ${btnHapus}
+                                ${btnAwal}${btnLunas}${btnEdit}${btnHapus}
                             </div>
                         </td>`;
                     tbodyNota.appendChild(tr);
@@ -927,7 +1022,7 @@
                 listPureExp.forEach(r => {
                     const safeExpId = String(r[4]).replace(/'/g, "\\'");
                     const tr = document.createElement('tr'); tr.className = "border-b text-xs hover:bg-slate-50";
-                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]}</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeExpId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt"></i></button></td>`;
+                    tr.innerHTML = `<td class="p-4 text-slate-400">${new Date(r[0]).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</td><td class="p-4 font-medium">${r[1]} (${r[3]})</td><td class="p-4 font-bold text-red-500">${fmt(r[2])}</td><td class="p-4 text-center"><button type="button" onclick="deletePengeluaran('${safeExpId}')" class="text-rose-500 p-2 hover:bg-rose-50 rounded-lg"><i class="fas fa-trash-alt"></i></button></td>`;
                     tbodyExp.appendChild(tr);
                 });
             }
@@ -962,9 +1057,7 @@
 
             riwayatNota.forEach(r => {
                 if (r[0] && r[0].toString().startsWith("TRF-")) return;
-                
                 const tglOrder = r[7] ? new Date(r[7]) : new Date();
-                
                 if (tglOrder.getMonth() !== now.getMonth() || tglOrder.getFullYear() !== now.getFullYear()) return;
 
                 const tglDeadline = new Date(tglOrder.getTime() + (7 * 24 * 60 * 60 * 1000));
@@ -1007,19 +1100,28 @@
 
             let arrItems = [];
             document.querySelectorAll('.item-row').forEach(row => {
-                const cat = row.querySelector('.item-category').value;
+                const selectKat = row.querySelector('.item-kategori');
+                const catName = selectKat ? selectKat.value : '';
+                const n = row.querySelector('.item-name').value || catName;
                 const q = row.querySelector('.qty').value;
                 const p = parseRupiah(row.querySelector('.price').value);
-                if(cat) arrItems.push(`${cat} (${q}x @${Number(p).toLocaleString('id-ID')})`);
+                if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
             });
 
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
             const diskon = parseRupiah(document.getElementById('inputDiskon').value);
-            
             const persenDP = Number(document.getElementById('persenDP').value);
             const dp = parseRupiah(document.getElementById('inputDP').value || (persenDP === 1 ? total : total * persenDP));
 
-            await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value, diskon: diskon });
+            await sendPost({ 
+                tipe: "Nota", 
+                nama: custName, 
+                items: arrItems.join(", "), 
+                total: total, 
+                dp: dp, 
+                metode: document.getElementById('sumberDana').value,
+                diskon: diskon 
+            });
             clearPmesananForm();
         }
 
@@ -1046,7 +1148,7 @@
 
         function openPelunasanModal(id) {
             const item = getNotaItemById(id);
-            if(!item) return alert("Data nota tidak ditemukan pada sesi saat ini.");
+            if(!item) return alert("Data nota tidak ditemukan.");
             document.getElementById('lunas-id').value = item[0];
             document.getElementById('lunas-cust-name').innerText = item[1];
             const sisa = Number(item[5] || 0);
@@ -1070,39 +1172,24 @@
                     method: 'POST', 
                     mode: 'no-cors', 
                     headers: { 'Content-Type': 'text/plain' }, 
-                    body: JSON.stringify({ 
-                        tipe: "Pelunasan", 
-                        id: id, 
-                        metode: metodeBaru 
-                    }) 
+                    body: JSON.stringify({ tipe: "Pelunasan", id: id, metode: metodeBaru }) 
                 });
 
                 window._lastPelunasanMetode = metodeBaru;
                 cetakNotaStruk(id, true);
 
                 setTimeout(async () => { 
-                    const m = document.getElementById('searchBulan').value;
-                    const y = document.getElementById('searchTahun').value;
-                    const now = new Date();
-                    if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
-                        await updateDashboard(); 
-                    } else {
-                        await eksekusiCariBulanTahun();
-                    }
+                    await updateDashboard(); 
                     setLoading(false); 
                 }, 2000);
             } catch (error) {
-                console.error("Gagal melakukan pelunasan:", error);
                 setLoading(false);
             }
         }
 
         function openEditModal(id) {
             const item = getNotaItemById(id);
-            if (!item) {
-                alert("Data nota tidak ditemukan!");
-                return;
-            }
+            if (!item) return alert("Data nota tidak ditemukan!");
 
             document.getElementById('edit-id').value = item[0];
             document.getElementById('edit-nama').value = item[1] || '';
@@ -1114,25 +1201,15 @@
             container.innerHTML = '';
 
             let rawItems = item[2] || '';
-            try {
-                if (typeof rawItems === 'string' && rawItems.startsWith('[')) {
-                    rawItems = JSON.parse(rawItems);
-                }
-            } catch(e) {}
-
-            if (Array.isArray(rawItems)) {
-                rawItems = rawItems.join(', ');
-            }
+            try { if (typeof rawItems === 'string' && rawItems.startsWith('[')) rawItems = JSON.parse(rawItems); } catch(e) {}
+            if (Array.isArray(rawItems)) rawItems = rawItems.join(', ');
 
             if (typeof rawItems === 'string' && rawItems.includes('x @')) {
                 const parts = rawItems.split(', ');
                 parts.forEach(p => {
-                    const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
+                    const matches = p.match(/(.*)\s\((\d+(\.\d+)?)x\s@([\d.]+)\)/);
                     if (matches) {
-                        const namaBarang = matches[1].trim();
-                        const qtyBarang = matches[2];
-                        const hargaBarang = matches[3].replace(/\./g, '');
-                        addEditItemRow(namaBarang, qtyBarang, hargaBarang);
+                        addEditItemRow(matches[1].trim(), matches[2], matches[4].replace(/\./g, ''));
                     } else {
                         addEditItemRow(p, 1, 0);
                     }
@@ -1149,14 +1226,8 @@
             const container = document.getElementById('edit-items-container');
             const row = document.createElement('div');
             row.className = 'edit-item-row grid grid-cols-1 sm:grid-cols-4 gap-2 items-center bg-slate-50 p-3 rounded-xl border';
-            
-            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
-            globalKategoriList.forEach(cat => {
-                optionsHtml += `<option value="${cat.nama}" ${cat.nama === name ? 'selected' : ''}>${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
-            });
-
             row.innerHTML = `
-                <select class="edit-item-name p-2 rounded-lg border text-xs outline-none bg-white col-span-1">${optionsHtml}</select>
+                <input type="text" placeholder="Nama Barang" value="${name}" class="edit-item-name p-2 rounded-lg border text-xs outline-none col-span-1 sm:col-span-1">
                 <input type="text" placeholder="Qty" value="${qty}" class="edit-qty p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
                 <input type="text" placeholder="Harga" value="${Number(price).toLocaleString('id-ID')}" class="edit-price p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
                 <div class="flex justify-between items-center sm:justify-end gap-2">
@@ -1168,28 +1239,18 @@
         }
 
         function hitungTotalEdit() {
-            let subtotalBarang = 0;
+            let totalSub = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
-                const qtyEl = row.querySelector('.edit-qty');
-                const priceEl = row.querySelector('.edit-price');
-                
-                const qty = qtyEl ? parseRupiah(qtyEl.value) : 0;
-                const price = priceEl ? parseRupiah(priceEl.value) : 0;
-                
+                const qty = parseRupiah(row.querySelector('.edit-qty').value.replace(',','.'));
+                const price = parseRupiah(row.querySelector('.edit-price').value);
                 const sub = qty * price;
-                subtotalBarang += sub;
-                
-                const subText = row.querySelector('.edit-subtotal-text');
-                if (subText) {
-                    subText.innerText = "Rp " + sub.toLocaleString('id-ID');
-                }
+                totalSub += sub;
+                row.querySelector('.edit-subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
             });
 
             const diskon = parseRupiah(document.getElementById('edit-diskon').value);
-            const total = Math.max(0, subtotalBarang - diskon);
-
-            const dpEl = document.getElementById('edit-dp');
-            const dp = dpEl ? parseRupiah(dpEl.value) : 0;
+            const total = Math.max(0, totalSub - diskon);
+            const dp = parseRupiah(document.getElementById('edit-dp').value);
             const sisa = Math.max(0, total - dp);
 
             document.getElementById('edit-grandTotal-text').innerText = "Rp " + total.toLocaleString('id-ID');
@@ -1208,7 +1269,7 @@
             let arrItems = [];
             document.querySelectorAll('.edit-item-row').forEach(row => {
                 const n = row.querySelector('.edit-item-name').value;
-                const q = parseRupiah(row.querySelector('.edit-qty').value);
+                const q = row.querySelector('.edit-qty').value;
                 const p = parseRupiah(row.querySelector('.edit-price').value);
                 if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
             });
@@ -1225,7 +1286,7 @@
                 total: total, 
                 dp: dp, 
                 metode: document.getElementById('edit-metode').value,
-                diskon: diskon
+                diskon: diskon 
             });
         }
 
@@ -1243,61 +1304,6 @@
             } 
         }
 
-        function loadKategoriPage() {
-            const container = document.getElementById('kategori-container');
-            container.innerHTML = '';
-            globalKategoriList.forEach((cat, index) => {
-                const row = document.createElement('div');
-                row.className = 'cat-row grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-slate-50 p-3 rounded-xl border';
-                row.innerHTML = `
-                    <input type="text" placeholder="Nama Kategori" value="${cat.nama}" class="cat-name p-2 rounded-lg border text-sm outline-none">
-                    <input type="text" placeholder="Harga Dasar" value="${Number(cat.harga).toLocaleString('id-ID')}" class="cat-price p-2 rounded-lg border text-sm outline-none" oninput="formatInputRupiah(this)">
-                    <div class="text-right">
-                        <button type="button" onclick="this.closest('.cat-row').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i> Hapus</button>
-                    </div>`;
-                container.appendChild(row);
-            });
-        }
-
-        function tambahBarisKategori() {
-            const container = document.getElementById('kategori-container');
-            const row = document.createElement('div');
-            row.className = 'cat-row grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-slate-50 p-3 rounded-xl border';
-            row.innerHTML = `
-                <input type="text" placeholder="Nama Kategori" class="cat-name p-2 rounded-lg border text-sm outline-none">
-                <input type="text" placeholder="Harga Dasar" class="cat-price p-2 rounded-lg border text-sm outline-none" oninput="formatInputRupiah(this)">
-                <div class="text-right">
-                    <button type="button" onclick="this.closest('.cat-row').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i> Hapus</button>
-                </div>`;
-            container.appendChild(row);
-        }
-
-        async function simpanKategoriServer() {
-            setLoading(true);
-            let list = [];
-            document.querySelectorAll('.cat-row').forEach(row => {
-                const nama = row.querySelector('.cat-name').value;
-                const harga = parseRupiah(row.querySelector('.cat-price').value);
-                if (nama) list.push({ nama, harga });
-            });
-
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify({ tipe: "SimpanKategori", list: list })
-                });
-                globalKategoriList = list;
-                updateAllCategoryDropdowns();
-                alert("Kategori berhasil disimpan!");
-                setLoading(false);
-            } catch(e) {
-                alert("Gagal menyimpan kategori.");
-                setLoading(false);
-            }
-        }
-
         function kirimWhatsAppEstimasi() {
             const name = document.getElementById('waCustName').value || 'Pelanggan'; 
             const bonusPaket = document.getElementById('waBonusPaket').value;
@@ -1305,16 +1311,12 @@
             let strings = []; 
             document.querySelectorAll('.est-item-row').forEach(row => {
                 const n = row.querySelector('.est-name').value; 
-                const q = parseRupiah(row.querySelector('.est-qty').value); 
+                const q = row.querySelector('.est-qty').value; 
                 const p = parseRupiah(row.querySelector('.est-price').value);
                 if(n) strings.push(`- ${n} (Qty: ${q} x Rp ${Number(p).toLocaleString('id-ID')})`);
             });
 
-            let bonusText = "";
-            if (bonusPaket) {
-                bonusText = `\n🎁 *Bonus Free:* ${bonusPaket}`;
-            }
-
+            let bonusText = bonusPaket ? `\n🎁 *Bonus Free:* ${bonusPaket}` : "";
             const persenVal = Number(document.getElementById('estPersenDP').value);
             let text = "";
             
@@ -1324,7 +1326,6 @@
                 const persenStr = (persenVal * 100) + "%";
                 text = `Halo Kak *${name}*,\n\nBerikut rincian estimasi harga pesanan cetak di *Asheeqa Printing*:\n${strings.join("\n")}${bonusText}\n\n*Total Estimasi:* ${document.getElementById('estTotal').innerText}\n*Wajib DP ${persenStr}:* ${document.getElementById('estDP').innerText}\n*Sisa Saat Selesai:* ${document.getElementById('estSisa').innerText}\n\nTerima kasih kak! ✨`;
             }
-            
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         }
 
@@ -1335,12 +1336,12 @@
             if (itemsString && itemsString.includes('x @')) {
                 const parts = itemsString.split(', ');
                 parts.forEach(p => {
-                    const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
+                    const matches = p.match(/(.*)\s\((\d+(\.\d+)?)x\s@([\d.]+)\)/);
                     if (matches) {
                         const name = matches[1];
                         const qty = matches[2];
-                        const price = Number(matches[3].replace(/[^0-9]/g, ''));
-                        const sub = qty * price;
+                        const price = Number(matches[4].replace(/[^0-9]/g, ''));
+                        const sub = parseFloat(qty) * price;
 
                         const tr = document.createElement('tr');
                         tr.className = "border-b border-slate-100";
@@ -1357,9 +1358,9 @@
                 tr.className = "border-b border-slate-100";
                 tr.innerHTML = `
                     <td class="p-3 font-bold text-slate-900">${itemsString || '-'}</td>
-                    <td class="p-3 text-right">Rp 0</td>
+                    <td class="p-3 text-right">-</td>
                     <td class="p-3 text-center">1</td>
-                    <td class="p-3 text-right font-semibold">Rp 0</td>`;
+                    <td class="p-3 text-right font-semibold">-</td>`;
                 tbody.appendChild(tr);
             }
         }
@@ -1369,35 +1370,38 @@
             if(!item) return alert("Gagal mencetak: Nota tidak ditemukan.");
             
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-            const finalTotal = Number(item[3] || 0);
+            const totalBayar = Number(item[3] || 0);
             const dpBayar = Number(item[4] || 0);
             const sisaAwal = Number(item[5] || 0);
             const diskonVal = Number(item[8] || 0);
-            const subtotalBarang = finalTotal + diskonVal;
             
-            const isLunasLangsung = (dpBayar >= finalTotal || sisaAwal === 0) && !isForceLunas;
+            // Hitung subtotal barang sebelum diskon
+            let subtotalBarang = totalBayar + diskonVal;
+
+            const isLunasLangsung = (dpBayar >= totalBayar || sisaAwal === 0) && !isForceLunas;
             const isLunasMurni = (sisaAwal === 0 || isForceLunas);
 
             document.getElementById('print-cust').innerText = item[1];
-            const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            document.getElementById('print-tgl').innerText = tglFormatted;
+            document.getElementById('print-tgl').innerText = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
             
             parseItemsToPrintRows(item[2]);
             
-            document.getElementById('print-subtotal-barang').innerText = fmt(subtotalBarang);
+            // Tampilkan subtotal, diskon jika ada, dan total
+            document.getElementById('print-subtotal-val').innerText = fmt(subtotalBarang);
+            
             const diskonRow = document.getElementById('print-diskon-row');
-            if (diskonVal > 0) {
+            if(diskonVal > 0) {
                 diskonRow.style.display = 'flex';
-                document.getElementById('print-diskon').innerText = "- " + fmt(diskonVal);
+                document.getElementById('print-diskon-val').innerText = "- " + fmt(diskonVal);
             } else {
                 diskonRow.style.display = 'none';
             }
-            document.getElementById('print-total').innerText = fmt(finalTotal);
+
+            document.getElementById('print-total').innerText = fmt(totalBayar);
             
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            
             const badgeDPContainer = document.getElementById('print-badge-dp-container');
             const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
 
@@ -1406,7 +1410,6 @@
             if (isLunasLangsung) {
                 dpRow.style.display = 'none';
                 sisaRow.style.display = 'none';
-                
                 stempelElm.classList.remove('hidden');
                 badgeLunasContainer.classList.add('hidden');
                 badgeDPContainer.querySelector('span').innerHTML = `Metode Bayar: <strong class="uppercase text-sky-950">${item[6] || 'Cash'}</strong>`;
@@ -1414,8 +1417,7 @@
             else if (isLunasMurni) {
                 dpRow.style.display = 'flex';
                 sisaRow.style.display = 'flex';
-
-                const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (finalTotal - dpBayar);
+                const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (totalBayar - dpBayar);
                 
                 document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
                 document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
@@ -1429,7 +1431,6 @@
             else {
                 dpRow.style.display = 'flex';
                 sisaRow.style.display = 'flex';
-
                 document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
                 document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
                 document.getElementById('print-sisa-label').innerText = "Sisa Pelunasan";
@@ -1440,10 +1441,7 @@
             }
 
             const oldTitle = document.title;
-            const cleanCustName = item[1].replace(/[^a-zA-Z0-9]/g, "_");
-            const cleanDate = new Date(item[7]).toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
-            document.title = `${cleanCustName}_${cleanDate}`;
-            
+            document.title = `${item[1].replace(/[^a-zA-Z0-9]/g, "_")}`;
             window.print();
             setTimeout(() => { document.title = oldTitle; }, 1000);
         }
@@ -1457,37 +1455,28 @@
 
             let subtotalBarang = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const categorySelect = row.querySelector('.item-category');
-                const catName = categorySelect ? categorySelect.value : '';
-                let qtyRaw = row.querySelector('.qty').value;
+                const selectKat = row.querySelector('.item-kategori');
+                const catName = selectKat ? selectKat.value : '';
+                const n = row.querySelector('.item-name').value || catName;
+                const q = row.querySelector('.qty').value;
                 const p = parseRupiah(row.querySelector('.price').value);
 
-                let qty = parseRupiah(qtyRaw);
-                if (catName.toLowerCase() === 'spanduk') {
-                    let numVal = parseFloat(qtyRaw.replace(',', '.')) || 0;
-                    if (numVal > 0 && numVal <= 0.5) {
-                        qty = 1;
-                    } else if (numVal > 0) {
-                        qty = Math.ceil(numVal);
-                    }
-                }
-
-                if(catName) {
-                    const sub = qty * p;
+                if(n) {
+                    const sub = parseFloat(q || 0) * p;
                     subtotalBarang += sub;
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-slate-100";
                     tr.innerHTML = `
-                        <td class="p-3 font-bold text-slate-900">${catName}</td>
+                        <td class="p-3 font-bold text-slate-900">${n}</td>
                         <td class="p-3 text-right">Rp ${p.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center">${qty}</td>
+                        <td class="p-3 text-center">${q}</td>
                         <td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
                     tbody.appendChild(tr);
                 }
             });
 
+            const total = parseRupiah(document.getElementById('grandTotal').innerText);
             const diskonVal = parseRupiah(document.getElementById('inputDiskon').value);
-            const total = Math.max(0, subtotalBarang - diskonVal);
             const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
             const sisaVal = Math.max(0, total - dpVal);
             const isLunasLangsung = (sisaVal === 0 || dpVal >= total);
@@ -1497,20 +1486,20 @@
             document.getElementById('print-cust').innerText = custName;
             document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 
-            document.getElementById('print-subtotal-barang').innerText = fmt(subtotalBarang);
+            document.getElementById('print-subtotal-val').innerText = fmt(subtotalBarang);
             const diskonRow = document.getElementById('print-diskon-row');
-            if (diskonVal > 0) {
+            if(diskonVal > 0) {
                 diskonRow.style.display = 'flex';
-                document.getElementById('print-diskon').innerText = "- " + fmt(diskonVal);
+                document.getElementById('print-diskon-val').innerText = "- " + fmt(diskonVal);
             } else {
                 diskonRow.style.display = 'none';
             }
+
             document.getElementById('print-total').innerText = fmt(total);
             
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
             const stempelElm = document.getElementById('print-stempel-lunas');
-            
             const badgeDPContainer = document.getElementById('print-badge-dp-container');
             const badgeLunasContainer = document.getElementById('print-badge-lunas-container');
             const metodeInput = document.getElementById('sumberDana').value;
@@ -1519,7 +1508,6 @@
                 dpRow.style.display = 'none';
                 sisaRow.style.display = 'none';
                 stempelElm.classList.remove('hidden');
-                
                 badgeLunasContainer.classList.add('hidden');
                 badgeDPContainer.querySelector('span').innerHTML = `Metode Bayar: <strong class="uppercase text-sky-950">${metodeInput}</strong>`;
             } else {
@@ -1529,17 +1517,13 @@
                 document.getElementById('print-dp').innerText = "- " + fmt(dpVal);
                 document.getElementById('print-sisa-label').innerText = "Sisa Pelunasan";
                 document.getElementById('print-sisa').innerText = fmt(sisaVal);
-                
                 document.getElementById('print-badge-dp').innerText = metodeInput;
                 stempelElm.classList.add('hidden');
                 badgeLunasContainer.classList.add('hidden');
             }
 
-            const cName = custName.replace(/[^a-zA-Z0-9]/g, "_");
-            const cDate = new Date().toLocaleDateString('id-ID', {day:'2-digit', month:'2-digit', year:'numeric'}).replace(/\//g, "-");
             const originalTitle = document.title;
-            document.title = `${cName}_${cDate}`;
-            
+            document.title = `${custName.replace(/[^a-zA-Z0-9]/g, "_")}`;
             window.print();
             setTimeout(() => { document.title = originalTitle; }, 1000);
 
@@ -1550,14 +1534,7 @@
             try {
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
                 setTimeout(async () => { 
-                    const m = document.getElementById('searchBulan').value;
-                    const y = document.getElementById('searchTahun').value;
-                    const now = new Date();
-                    if(Number(m) === now.getMonth() && Number(y) === now.getFullYear()){
-                        await updateDashboard(); 
-                    } else {
-                        await eksekusiCariBulanTahun();
-                    }
+                    await updateDashboard(); 
                     setLoading(false); 
                 }, 2000);
             } catch(e) { setLoading(false); }
@@ -1568,35 +1545,32 @@
         function clearPmesananForm() {
             document.getElementById('custName').value = ''; 
             document.getElementById('inputDP').value = '';
-            document.getElementById('inputDiskon').value = '0';
+            document.getElementById('inputDiskon').value = '';
             document.getElementById('persenDP').value = '0.5';
             isManualDP = false; 
             
-            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
-            globalKategoriList.forEach(cat => {
-                optionsHtml += `<option value="${cat.nama}" data-harga="${cat.harga}">${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
-            });
-
             document.getElementById('items-container').innerHTML = `
                 <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">${optionsHtml}</select>
+                    <select class="item-kategori p-3 rounded-xl border outline-none bg-white font-medium" onchange="onKategoriChange(this)">
+                        <option value="">-- Pilih Kategori / Manual --</option>
+                    </select>
                     <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                    <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                    <input type="text" placeholder="Harga Satuan" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                     <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
                 </div>`;
             
+            populateKategoriDropdowns();
             hitungTotal(); 
-            
-            const btnInput = document.querySelector("nav a[onclick*='input']");
-            showPage('input', btnInput);
+            showPage('input', document.querySelector("nav a[onclick*='input']"));
         }
 
-        window.onload = function() {
+        window.onload = async function() {
             document.getElementById('main-logo-img').src = LOGO_URL; 
             document.getElementById('print-logo-img').src = LOGO_URL; 
             
             buildDropdownSelector();
-            updateDashboard();
+            await fetchMasterKategori();
+            await updateDashboard();
         };
     </script>
 </body>
