@@ -49,8 +49,7 @@
 <body class="bg-slate-100 flex flex-col lg:flex-row text-slate-700">
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwZGM6BkCaZciov_89BDy3Tu_USIo3zB6bZQhUsM_fFDP5gVJcGnTUOKf_ys1EeIfNqcA/exec
-        ";
+        const API_URL = "https://script.google.com/macros/s/AKfycby7dm7b5P05en7Yfdq-uPzpIhCaS5umQnSzDZ-1EPnIfPJ8sjDtP1tpyUMl5nb66z8msQ/exec";
         const LOGO_URL = "https://lh3.googleusercontent.com/d/1F055wulsiC-LDjW_NMZ4yXsMSCDj53TW"; 
     </script>
 
@@ -67,10 +66,10 @@
         <nav class="flex flex-row lg:flex-col gap-1 lg:space-y-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 no-scrollbar">
             <a onclick="showPage('dashboard', this)" class="nav-item active flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg font-semibold whitespace-nowrap"><i class="fas fa-th-large w-4 lg:w-6"></i> Dashboard</a>
             <a onclick="showPage('input', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-plus-circle w-4 lg:w-6"></i> Input</a>
-            <a onclick="showPage('kategori', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tags w-4 lg:w-6"></i> Kategori</a>
             <a onclick="showPage('estimasi', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fab fa-whatsapp w-4 lg:w-6"></i> Estimasi</a>
             <a onclick="showPage('orderflow', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tasks w-4 lg:w-6"></i> Flow</a>
             <a onclick="showPage('riwayat', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-history w-4 lg:w-6"></i> Riwayat</a>
+            <a onclick="showPage('kategori', this)" class="nav-item flex items-center gap-2 lg:gap-4 p-2 lg:p-4 rounded-xl text-xs lg:text-lg whitespace-nowrap"><i class="fas fa-tags w-4 lg:w-6"></i> Kategori</a>
         </nav>
     </div>
 
@@ -87,7 +86,7 @@
                     <i class="fas fa-sync-alt"></i> Refresh Data
                 </button>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
                     <div class="bg-blue-50 text-blue-600 p-4 rounded-2xl text-xl"><i class="fas fa-wallet"></i></div>
                     <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Cash</p><h3 id="saldoCash" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
@@ -101,7 +100,7 @@
                     <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">BRI</p><h3 id="saldoBRI" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center gap-4">
-                    <div class="bg-cyan-50 text-cyan-600 p-4 rounded-2xl text-xl"><i class="fas fa-university"></i></div>
+                    <div class="bg-teal-50 text-teal-600 p-4 rounded-2xl text-xl"><i class="fas fa-university"></i></div>
                     <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Mandiri</p><h3 id="saldoMandiri" class="text-xl font-bold text-slate-800">Rp 0</h3></div>
                 </div>
             </div>
@@ -135,23 +134,21 @@
                     <div>
                         <label class="block text-sm font-semibold text-slate-600 mb-2">Daftar Item Pemesanan</label>
                         <div id="items-container" class="space-y-4">
-                            <div class="item-row grid grid-cols-1 md:grid-cols-5 gap-3 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                <select class="item-cat-select p-3 rounded-xl border outline-none bg-white text-xs font-semibold" onchange="onItemCategoryChange(this)">
+                            <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">
                                     <option value="">-- Pilih Kategori --</option>
                                 </select>
-                                <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none md:col-span-1">
-                                <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                                <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                                 <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                                 <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
                             </div>
                         </div>
                         <button onclick="addItem()" class="text-emerald-600 font-semibold text-sm hover:underline mt-2 inline-block">+ Tambah Item Baru</button>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-slate-600 mb-2">Diskon (Nominal Rp)</label>
-                            <input type="text" id="inputDiskon" placeholder="Masukkan diskon jika ada" oninput="formatInputRupiah(this); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none bg-slate-50/50">
+                            <label class="block text-sm font-semibold text-slate-600 mb-2">Diskon (Rp)</label>
+                            <input type="text" id="inputDiskon" placeholder="Nominal Diskon" value="0" oninput="formatInputRupiah(this); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Metode Pembayaran</label>
@@ -162,12 +159,9 @@
                                 <option value="Mandiri">Transfer Mandiri</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <div class="flex justify-between items-center mb-2">
-                                <label class="block text-sm font-semibold text-slate-600">Manual DP / Pembayaran awal</label>
+                                <label class="block text-sm font-semibold text-slate-600">Manual DP</label>
                                 <select id="persenDP" onchange="isManualDP=false; hitungTotal()" class="text-xs font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-1 outline-none">
                                     <option value="0.5">DP 50%</option>
                                     <option value="0.7">DP 70%</option>
@@ -177,7 +171,6 @@
                             <input type="text" id="inputDP" placeholder="Nominal Bayar/DP" oninput="formatInputRupiah(this); markManualDP(); hitungTotal()" class="w-full p-4 border border-slate-200 rounded-2xl outline-none">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-6 bg-slate-900 text-white p-6 rounded-3xl shadow-inner">
                         <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Harga</p><p id="grandTotal" class="text-2xl font-bold text-emerald-400">Rp 0</p></div>
                         <div><p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Sisa Tagihan</p><p id="sisaTagihanText" class="text-2xl font-bold text-rose-400">Rp 0</p></div>
@@ -201,10 +194,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Ambil Dari Kas</label>
                             <select id="expMetode" class="w-full p-4 border rounded-2xl bg-white">
-                                <option value="Cash">Cash</option>
-                                <option value="BRI">BRI</option>
-                                <option value="BNI">BNI</option>
-                                <option value="Mandiri">Mandiri</option>
+                                <option value="Cash">Cash</option><option value="BRI">BRI</option><option value="BNI">BNI</option><option value="Mandiri">Mandiri</option>
                             </select>
                         </div>
                     </div>
@@ -215,21 +205,11 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Dari Saldo Kas</label>
-                            <select id="mutasiDari" class="w-full p-4 border rounded-2xl bg-white">
-                                <option value="Cash">Dari Cash</option>
-                                <option value="BRI">Dari BRI</option>
-                                <option value="BNI">Dari BNI</option>
-                                <option value="Mandiri">Dari Mandiri</option>
-                            </select>
+                            <select id="mutasiDari" class="w-full p-4 border rounded-2xl bg-white"><option value="Cash">Dari Cash</option><option value="BRI">Dari BRI</option><option value="BNI">Dari BNI</option><option value="Mandiri">Dari Mandiri</option></select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-600 mb-2">Ke Rekening Tujuan</label>
-                            <select id="mutasiKe" class="w-full p-4 border rounded-2xl bg-white">
-                                <option value="BNI">Ke BNI</option>
-                                <option value="BRI">Ke BRI</option>
-                                <option value="Mandiri">Ke Mandiri</option>
-                                <option value="Cash">Ke Cash</option>
-                            </select>
+                            <select id="mutasiKe" class="w-full p-4 border rounded-2xl bg-white"><option value="BNI">Ke BNI</option><option value="BRI">Ke BRI</option><option value="Mandiri">Ke Mandiri</option><option value="Cash">Ke Cash</option></select>
                         </div>
                     </div>
                     <div>
@@ -237,33 +217,6 @@
                         <input type="text" id="mutasiTotal" placeholder="Masukkan nominal transfer" oninput="formatInputRupiah(this)" class="w-full p-4 border rounded-2xl outline-none">
                     </div>
                     <button onclick="simpanMutasi()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-2xl transition shadow-lg">PROSES PERALIHAN DANA</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- MENU KATEGORI -->
-        <div id="kategori" class="page-section p-10 space-y-6">
-            <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800">Manajemen Kategori Produk & Harga</h2>
-                        <p class="text-xs text-slate-400 mt-1">Tambah, edit, atau hapus kategori dan harga standar untuk form input pesanan.</p>
-                    </div>
-                    <button onclick="openAddCategoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Tambah Kategori
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold text-xs uppercase">
-                                <th class="p-4">Nama Kategori / Produk</th>
-                                <th class="p-4">Harga Dasar (Rp)</th>
-                                <th class="p-4 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-kategori" class="divide-y divide-slate-100 text-sm font-medium"></tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -323,6 +276,19 @@
                     </thead>
                     <tbody id="table-orderflow" class="divide-y divide-slate-100 text-sm font-medium text-slate-700"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- HALAMAN KATEGORI & HARGA -->
+        <div id="kategori" class="page-section p-10 space-y-6">
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100 space-y-6">
+                <div class="flex justify-between items-center border-b pb-4">
+                    <h2 class="text-2xl font-bold text-slate-800">Pengaturan Kategori & Harga Dasar</h2>
+                    <button onclick="simpanKategoriServer()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow transition">Simpan Perubahan</button>
+                </div>
+                <p class="text-xs text-slate-500">Anda dapat mengubah harga dasar, menambah kategori baru, atau menghapus kategori. Spanduk menggunakan logika perhitungan otomatis (0,5 meter dihitung 1 meter).</p>
+                <div id="kategori-container" class="space-y-3"></div>
+                <button onclick="tambahBarisKategori()" class="text-emerald-600 font-semibold text-sm hover:underline inline-block">+ Tambah Kategori Baru</button>
             </div>
         </div>
 
@@ -398,31 +364,6 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH / EDIT KATEGORI -->
-    <div id="modal-kategori" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 id="modal-kategori-title" class="text-lg font-bold text-slate-800">Tambah Kategori Produk</h3>
-                <button onclick="closeCategoryModal()" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times text-lg"></i></button>
-            </div>
-            <input type="hidden" id="cat-edit-index" value="-1">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kategori / Produk</label>
-                    <input type="text" id="cat-name-input" placeholder="Contoh: CG52 - Undangan Hardcover" class="w-full p-3 border rounded-xl text-sm outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Harga Dasar (Rp)</label>
-                    <input type="text" id="cat-price-input" placeholder="Contoh: 3.000" oninput="formatInputRupiah(this)" class="w-full p-3 border rounded-xl text-sm outline-none">
-                </div>
-            </div>
-            <div class="flex gap-3 pt-2">
-                <button type="button" onclick="closeCategoryModal()" class="w-1/2 bg-slate-100 py-3 rounded-xl font-bold text-sm">Batal</button>
-                <button type="button" onclick="saveCategory()" class="w-1/2 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm">Simpan</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL EDIT NOTA -->
     <div id="modal-edit" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
         <div class="bg-white rounded-3xl w-full max-w-2xl p-6 shadow-2xl space-y-4 my-8">
@@ -443,6 +384,22 @@
                     <button type="button" onclick="addEditItemRow()" class="text-emerald-600 font-semibold text-xs hover:underline mt-2 inline-block">+ Tambah Barang</button>
                 </div>
 
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Diskon (Rp)</label>
+                        <input type="text" id="edit-diskon" placeholder="Diskon" value="0" oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
+                        <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
+                            <option value="Cash">Cash / Tunai</option>
+                            <option value="BRI">Transfer BRI</option>
+                            <option value="BNI">Transfer BNI</option>
+                            <option value="Mandiri">Transfer Mandiri</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border">
                     <div>
                         <span class="text-xs text-slate-500 block font-semibold">Total Harga:</span>
@@ -454,20 +411,9 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Uang Muka / DP</label>
-                        <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran DP</label>
-                        <select id="edit-metode" class="w-full p-3 border rounded-xl bg-white text-sm">
-                            <option value="Cash">Cash / Tunai</option>
-                            <option value="BRI">Transfer BRI</option>
-                            <option value="BNI">Transfer BNI</option>
-                            <option value="Mandiri">Transfer Mandiri</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Uang Muka / DP</label>
+                    <input type="text" id="edit-dp" placeholder="DP / Bayar" required oninput="formatInputRupiah(this); hitungTotalEdit()" class="w-full p-3 border rounded-xl text-sm">
                 </div>
 
                 <div class="flex gap-3 pt-2">
@@ -503,7 +449,6 @@
                         <option value="BNI">Transfer BNI</option>
                         <option value="Mandiri">Transfer Mandiri</option>
                     </select>
-                    <p class="text-[10px] text-slate-400 mt-1">Contoh: Saat DP menggunakan BRI, saat Pelunasan dapat diubah menggunakan Mandiri/BNI.</p>
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
@@ -575,16 +520,16 @@
             </div>
 
             <div class="w-80 border border-slate-300 rounded-xl overflow-hidden shadow-sm text-xs font-semibold">
-                <div class="flex justify-between items-center p-3 bg-slate-50/50" id="print-subtotal-row">
+                <div class="flex justify-between items-center p-3 bg-slate-50/50">
                     <span class="text-slate-500">Subtotal Barang</span>
-                    <span id="print-subtotal-val" class="text-slate-900 font-bold text-right">Rp 0</span>
+                    <span id="print-subtotal-barang" class="text-slate-900 font-black text-right">Rp 0</span>
                 </div>
-                <div class="flex justify-between items-center border-t border-slate-200 p-3 bg-slate-50/30 text-emerald-600" id="print-diskon-row" style="display: none;">
+                <div id="print-diskon-row" class="hidden flex justify-between items-center border-t border-slate-200 p-3 text-amber-600 bg-amber-50/20">
                     <span>Diskon</span>
-                    <span id="print-diskon-val" class="font-bold text-right">- Rp 0</span>
+                    <span id="print-diskon" class="font-bold text-right">- Rp 0</span>
                 </div>
-                <div class="flex justify-between items-center border-t border-slate-200 p-3 bg-slate-50/50" id="print-total-row">
-                    <span class="text-slate-500">Total Keseluruhan</span>
+                <div class="flex justify-between items-center border-t border-slate-200 p-3 bg-slate-50/50">
+                    <span class="text-slate-500 font-bold">Total Keseluruhan</span>
                     <span id="print-total" class="text-slate-900 font-black text-right">Rp 0</span>
                 </div>
                 <div class="flex justify-between items-center border-t border-slate-200 p-3 text-emerald-700 bg-emerald-50/20" id="print-dp-row">
@@ -607,136 +552,8 @@
         let globalDataCache = { riwayatNota: [], riwayatExp: [] };
         let localNotaList = [];
         let localExpList = [];
+        let globalKategoriList = [];
         let isManualDP = false;
-
-        // Default Kategori & Harga Produk Asheeqa Printing
-        let defaultCategories = [
-            { name: "CG52 - Undangan Hardcover", price: 3000 },
-            { name: "CG47 - Undangan Softcover", price: 2500 },
-            { name: "CG43 - Undangan Softcover", price: 2000 },
-            { name: "CG18 - Undangan Softcover", price: 1500 },
-            { name: "CG35 - Undangan Softcover", price: 2500 },
-            { name: "CG36 - Undangan Softcover", price: 2000 },
-            { name: "CG39 - Undangan Hardcover", price: 3500 }
-        ];
-
-        function getCategories() {
-            let stored = localStorage.getItem('asheeqa_categories');
-            if (stored) {
-                try { return JSON.parse(stored); } catch(e) {}
-            }
-            localStorage.setItem('asheeqa_categories', JSON.stringify(defaultCategories));
-            return defaultCategories;
-        }
-
-        function saveCategoriesToStorage(cats) {
-            localStorage.setItem('asheeqa_categories', JSON.stringify(cats));
-            renderCategoryTable();
-            populateAllCategoryDropdowns();
-        }
-
-        function renderCategoryTable() {
-            const cats = getCategories();
-            const tbody = document.getElementById('tbody-kategori');
-            if(!tbody) return;
-            tbody.innerHTML = '';
-            cats.forEach((cat, idx) => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b text-xs hover:bg-slate-50";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-slate-800">${cat.name}</td>
-                    <td class="p-4 font-semibold text-emerald-600">Rp ${Number(cat.price).toLocaleString('id-ID')}</td>
-                    <td class="p-4 text-center">
-                        <div class="flex justify-center items-center gap-2">
-                            <button onclick="openEditCategoryModal(${idx})" class="text-amber-500 hover:text-amber-700 p-2 hover:bg-amber-50 rounded-lg transition"><i class="fas fa-edit"></i></button>
-                            <button onclick="deleteCategory(${idx})" class="text-rose-500 hover:text-rose-700 p-2 hover:bg-rose-50 rounded-lg transition"><i class="fas fa-trash-alt"></i></button>
-                        </div>
-                    </td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function populateAllCategoryDropdowns() {
-            const cats = getCategories();
-            document.querySelectorAll('.item-cat-select').forEach(sel => {
-                const currentVal = sel.value;
-                sel.innerHTML = `<option value="">-- Pilih Kategori --</option>`;
-                cats.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.name;
-                    opt.setAttribute('data-price', c.price);
-                    opt.innerText = `${c.name} (Rp ${Number(c.price).toLocaleString('id-ID')})`;
-                    if(currentVal === c.name) opt.selected = true;
-                    sel.appendChild(opt);
-                });
-            });
-        }
-
-        function onItemCategoryChange(sel) {
-            const row = sel.closest('.item-row');
-            if(!row) return;
-            const selectedOpt = sel.options[sel.selectedIndex];
-            const price = selectedOpt.getAttribute('data-price');
-            const name = selectedOpt.value;
-
-            const nameInput = row.querySelector('.item-name');
-            const priceInput = row.querySelector('.price');
-
-            if(name) {
-                nameInput.value = name;
-                if(price) {
-                    priceInput.value = Number(price).toLocaleString('id-ID');
-                }
-            }
-            hitungTotal();
-        }
-
-        function openAddCategoryModal() {
-            document.getElementById('modal-kategori-title').innerText = "Tambah Kategori Produk";
-            document.getElementById('cat-edit-index').value = "-1";
-            document.getElementById('cat-name-input').value = "";
-            document.getElementById('cat-price-input').value = "";
-            document.getElementById('modal-kategori').classList.remove('hidden');
-        }
-
-        function openEditCategoryModal(idx) {
-            const cats = getCategories();
-            const cat = cats[idx];
-            document.getElementById('modal-kategori-title').innerText = "Edit Kategori Produk";
-            document.getElementById('cat-edit-index').value = idx;
-            document.getElementById('cat-name-input').value = cat.name;
-            document.getElementById('cat-price-input').value = Number(cat.price).toLocaleString('id-ID');
-            document.getElementById('modal-kategori').classList.remove('hidden');
-        }
-
-        function closeCategoryModal() {
-            document.getElementById('modal-kategori').classList.add('hidden');
-        }
-
-        function saveCategory() {
-            const idx = Number(document.getElementById('cat-edit-index').value);
-            const name = document.getElementById('cat-name-input').value.trim();
-            const price = parseRupiah(document.getElementById('cat-price-input').value);
-
-            if(!name) return alert("Nama kategori wajib diisi!");
-
-            let cats = getCategories();
-            if(idx === -1) {
-                cats.push({ name, price });
-            } else {
-                cats[idx] = { name, price };
-            }
-            saveCategoriesToStorage(cats);
-            closeCategoryModal();
-        }
-
-        function deleteCategory(idx) {
-            if(confirm("Hapus kategori ini?")) {
-                let cats = getCategories();
-                cats.splice(idx, 1);
-                saveCategoriesToStorage(cats);
-            }
-        }
 
         function formatInputRupiah(elm) {
             let val = elm.value.replace(/[^0-9]/g, '');
@@ -756,9 +573,7 @@
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if(element) element.classList.add('active');
-            if(pageId === 'kategori') {
-                renderCategoryTable();
-            }
+            if(pageId === 'kategori') loadKategoriPage();
         }
 
         function showInput(type, element) {
@@ -791,25 +606,61 @@
             }
         }
 
+        async function fetchKategoriData() {
+            try {
+                const res = await fetch(`${API_URL}?action=getKategori`);
+                globalKategoriList = await res.json();
+                updateAllCategoryDropdowns();
+            } catch(e) {
+                globalKategoriList = [{ nama: "Spanduk", harga: 25000 }];
+                updateAllCategoryDropdowns();
+            }
+        }
+
+        function updateAllCategoryDropdowns() {
+            document.querySelectorAll('.item-category').forEach(select => {
+                const currentVal = select.value;
+                select.innerHTML = '<option value="">-- Pilih Kategori / Manual --</option>';
+                globalKategoriList.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.nama;
+                    opt.setAttribute('data-harga', cat.harga);
+                    opt.innerText = `${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})`;
+                    if(cat.nama === currentVal) opt.selected = true;
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function onCategoryChange(selectElm) {
+            const row = selectElm.closest('.item-row');
+            const selectedOpt = selectElm.options[selectElm.selectedIndex];
+            const priceInput = row.querySelector('.price');
+            const qtyInput = row.querySelector('.qty');
+
+            if (selectedOpt && selectedOpt.value) {
+                const harga = selectedOpt.getAttribute('data-harga');
+                priceInput.value = Number(harga).toLocaleString('id-ID');
+                if (!qtyInput.value) qtyInput.value = "1";
+            }
+            hitungTotal();
+        }
+
         function addItem() {
             const container = document.getElementById('items-container');
             const newRow = document.createElement('div');
-            newRow.className = 'item-row grid grid-cols-1 md:grid-cols-5 gap-3 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100';
+            newRow.className = 'item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100';
             
-            let catOptions = `<option value="">-- Pilih Kategori --</option>`;
-            getCategories().forEach(c => {
-                catOptions += `<option value="${c.name}" data-price="${c.price}">${c.name} (Rp ${Number(c.price).toLocaleString('id-ID')})</option>`;
+            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
+            globalKategoriList.forEach(cat => {
+                optionsHtml += `<option value="${cat.nama}" data-harga="${cat.harga}">${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
             });
 
             newRow.innerHTML = `
-                <select class="item-cat-select p-3 rounded-xl border outline-none bg-white text-xs font-semibold" onchange="onItemCategoryChange(this)">${catOptions}</select>
-                <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none md:col-span-1">
-                <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">${optionsHtml}</select>
+                <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                 <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
-                <div class="flex justify-between items-center md:justify-end">
-                    <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
-                    <button type="button" onclick="this.closest('.item-row').remove(); hitungTotal();" class="text-rose-500 hover:text-rose-700 p-1 md:hidden"><i class="fas fa-trash"></i></button>
-                </div>`;
+                <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>`;
             container.appendChild(newRow);
         }
 
@@ -825,16 +676,31 @@
         }
 
         function hitungTotal() {
-            let subtotal = 0;
+            let subtotalBarang = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const qty = parseRupiah(row.querySelector('.qty').value);
+                const categorySelect = row.querySelector('.item-category');
+                const catName = categorySelect ? categorySelect.value : '';
+                let qtyRaw = row.querySelector('.qty').value;
                 const price = parseRupiah(row.querySelector('.price').value);
-                subtotal += (qty * price);
-                row.querySelector('.subtotal-text').innerText = "Rp " + (qty * price).toLocaleString('id-ID');
+                
+                let qty = parseRupiah(qtyRaw);
+                // Logika khusus Spanduk: 0,5 meter dihitung 1 meter
+                if (catName.toLowerCase() === 'spanduk') {
+                    let numVal = parseFloat(qtyRaw.replace(',', '.')) || 0;
+                    if (numVal > 0 && numVal <= 0.5) {
+                        qty = 1;
+                    } else if (numVal > 0) {
+                        qty = Math.ceil(numVal);
+                    }
+                }
+
+                const sub = (qty * price);
+                subtotalBarang += sub;
+                row.querySelector('.subtotal-text').innerText = "Rp " + sub.toLocaleString('id-ID');
             });
             
             const diskon = parseRupiah(document.getElementById('inputDiskon').value);
-            let total = Math.max(0, subtotal - diskon);
+            const total = Math.max(0, subtotalBarang - diskon);
 
             const dpInputElm = document.getElementById('inputDP');
             const persenDP = Number(document.getElementById('persenDP').value);
@@ -852,7 +718,7 @@
             document.getElementById('sisaTagihanText').innerText = "Rp " + Math.max(0, total - dpInput).toLocaleString('id-ID');
         }
 
-        function hitungEstimasi() {
+        function hitung Estimasi() {
             let total = 0;
             document.querySelectorAll('.est-item-row').forEach(row => {
                 const qty = parseRupiah(row.querySelector('.est-qty').value);
@@ -883,6 +749,7 @@
         async function updateDashboard() {
             setLoading(true);
             try {
+                await fetchKategoriData();
                 const res = await fetch(`${API_URL}?action=getDashboard`);
                 const data = await res.json();
                 globalDataCache = data;
@@ -909,8 +776,7 @@
                 renderSplitTablesMaster();
 
                 setLoading(false);
-            } catch(e) { 
-                console.error("Dashboard error", e);
+            } catch(e) { console.error("Dashboard error", e);
                 setLoading(false);
             }
         }
@@ -1002,6 +868,7 @@
                         existing[5] = r[5]; 
                         existing[6] = r[6]; 
                         existing[7] = r[7]; 
+                        existing[8] = r[8];
                         if (r[2]) existing[2] = r[2]; 
                     } else {
                         existing[5] = Math.min(Number(existing[5] || 0), Number(r[5] || 0));
@@ -1140,22 +1007,19 @@
 
             let arrItems = [];
             document.querySelectorAll('.item-row').forEach(row => {
-                const n = row.querySelector('.item-name').value;
-                const q = parseRupiah(row.querySelector('.qty').value);
+                const cat = row.querySelector('.item-category').value;
+                const q = row.querySelector('.qty').value;
                 const p = parseRupiah(row.querySelector('.price').value);
-                if(n) arrItems.push(`${n} (${q}x @${Number(p).toLocaleString('id-ID')})`);
+                if(cat) arrItems.push(`${cat} (${q}x @${Number(p).toLocaleString('id-ID')})`);
             });
 
-            const diskon = parseRupiah(document.getElementById('inputDiskon').value);
-            if (diskon > 0) {
-                arrItems.push(`Diskon (-Rp ${diskon.toLocaleString('id-ID')})`);
-            }
-
             const total = parseRupiah(document.getElementById('grandTotal').innerText);
+            const diskon = parseRupiah(document.getElementById('inputDiskon').value);
+            
             const persenDP = Number(document.getElementById('persenDP').value);
             const dp = parseRupiah(document.getElementById('inputDP').value || (persenDP === 1 ? total : total * persenDP));
 
-            await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value });
+            await sendPost({ tipe: "Nota", nama: custName, items: arrItems.join(", "), total: total, dp: dp, metode: document.getElementById('sumberDana').value, diskon: diskon });
             clearPmesananForm();
         }
 
@@ -1244,6 +1108,7 @@
             document.getElementById('edit-nama').value = item[1] || '';
             document.getElementById('edit-dp').value = Number(item[4] || 0).toLocaleString('id-ID');
             document.getElementById('edit-metode').value = item[6] || 'Cash';
+            document.getElementById('edit-diskon').value = Number(item[8] || 0).toLocaleString('id-ID');
 
             const container = document.getElementById('edit-items-container');
             container.innerHTML = '';
@@ -1268,7 +1133,7 @@
                         const qtyBarang = matches[2];
                         const hargaBarang = matches[3].replace(/\./g, '');
                         addEditItemRow(namaBarang, qtyBarang, hargaBarang);
-                    } else if(!p.includes('Diskon')) {
+                    } else {
                         addEditItemRow(p, 1, 0);
                     }
                 });
@@ -1277,16 +1142,21 @@
             }
 
             hitungTotalEdit();
-            const modal = document.getElementById('modal-edit');
-            modal.classList.remove('hidden');
+            document.getElementById('modal-edit').classList.remove('hidden');
         }
 
         function addEditItemRow(name = '', qty = 1, price = 0) {
             const container = document.getElementById('edit-items-container');
             const row = document.createElement('div');
             row.className = 'edit-item-row grid grid-cols-1 sm:grid-cols-4 gap-2 items-center bg-slate-50 p-3 rounded-xl border';
+            
+            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
+            globalKategoriList.forEach(cat => {
+                optionsHtml += `<option value="${cat.nama}" ${cat.nama === name ? 'selected' : ''}>${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
+            });
+
             row.innerHTML = `
-                <input type="text" placeholder="Nama Barang" value="${name}" class="edit-item-name p-2 rounded-lg border text-xs outline-none col-span-1 sm:col-span-1">
+                <select class="edit-item-name p-2 rounded-lg border text-xs outline-none bg-white col-span-1">${optionsHtml}</select>
                 <input type="text" placeholder="Qty" value="${qty}" class="edit-qty p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
                 <input type="text" placeholder="Harga" value="${Number(price).toLocaleString('id-ID')}" class="edit-price p-2 rounded-lg border text-xs outline-none" oninput="formatInputRupiah(this); hitungTotalEdit()">
                 <div class="flex justify-between items-center sm:justify-end gap-2">
@@ -1298,20 +1168,25 @@
         }
 
         function hitungTotalEdit() {
-            let total = 0;
+            let subtotalBarang = 0;
             document.querySelectorAll('.edit-item-row').forEach(row => {
                 const qtyEl = row.querySelector('.edit-qty');
                 const priceEl = row.querySelector('.edit-price');
+                
                 const qty = qtyEl ? parseRupiah(qtyEl.value) : 0;
                 const price = priceEl ? parseRupiah(priceEl.value) : 0;
+                
                 const sub = qty * price;
-                total += sub;
+                subtotalBarang += sub;
                 
                 const subText = row.querySelector('.edit-subtotal-text');
                 if (subText) {
                     subText.innerText = "Rp " + sub.toLocaleString('id-ID');
                 }
             });
+
+            const diskon = parseRupiah(document.getElementById('edit-diskon').value);
+            const total = Math.max(0, subtotalBarang - diskon);
 
             const dpEl = document.getElementById('edit-dp');
             const dp = dpEl ? parseRupiah(dpEl.value) : 0;
@@ -1340,6 +1215,7 @@
 
             const total = parseRupiah(document.getElementById('edit-grandTotal-text').innerText);
             const dp = parseRupiah(document.getElementById('edit-dp').value);
+            const diskon = parseRupiah(document.getElementById('edit-diskon').value);
 
             await sendPost({ 
                 tipe: "EditNota", 
@@ -1348,7 +1224,8 @@
                 items: arrItems.join(", "), 
                 total: total, 
                 dp: dp, 
-                metode: document.getElementById('edit-metode').value 
+                metode: document.getElementById('edit-metode').value,
+                diskon: diskon
             });
         }
 
@@ -1364,6 +1241,61 @@
                 setLoading(true); 
                 await sendPost({ tipe: "HapusPengeluaran", id: id }); 
             } 
+        }
+
+        function loadKategoriPage() {
+            const container = document.getElementById('kategori-container');
+            container.innerHTML = '';
+            globalKategoriList.forEach((cat, index) => {
+                const row = document.createElement('div');
+                row.className = 'cat-row grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-slate-50 p-3 rounded-xl border';
+                row.innerHTML = `
+                    <input type="text" placeholder="Nama Kategori" value="${cat.nama}" class="cat-name p-2 rounded-lg border text-sm outline-none">
+                    <input type="text" placeholder="Harga Dasar" value="${Number(cat.harga).toLocaleString('id-ID')}" class="cat-price p-2 rounded-lg border text-sm outline-none" oninput="formatInputRupiah(this)">
+                    <div class="text-right">
+                        <button type="button" onclick="this.closest('.cat-row').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>`;
+                container.appendChild(row);
+            });
+        }
+
+        function tambahBarisKategori() {
+            const container = document.getElementById('kategori-container');
+            const row = document.createElement('div');
+            row.className = 'cat-row grid grid-cols-1 sm:grid-cols-3 gap-3 items-center bg-slate-50 p-3 rounded-xl border';
+            row.innerHTML = `
+                <input type="text" placeholder="Nama Kategori" class="cat-name p-2 rounded-lg border text-sm outline-none">
+                <input type="text" placeholder="Harga Dasar" class="cat-price p-2 rounded-lg border text-sm outline-none" oninput="formatInputRupiah(this)">
+                <div class="text-right">
+                    <button type="button" onclick="this.closest('.cat-row').remove()" class="text-rose-500 hover:text-rose-700 p-2"><i class="fas fa-trash"></i> Hapus</button>
+                </div>`;
+            container.appendChild(row);
+        }
+
+        async function simpanKategoriServer() {
+            setLoading(true);
+            let list = [];
+            document.querySelectorAll('.cat-row').forEach(row => {
+                const nama = row.querySelector('.cat-name').value;
+                const harga = parseRupiah(row.querySelector('.cat-price').value);
+                if (nama) list.push({ nama, harga });
+            });
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ tipe: "SimpanKategori", list: list })
+                });
+                globalKategoriList = list;
+                updateAllCategoryDropdowns();
+                alert("Kategori berhasil disimpan!");
+                setLoading(false);
+            } catch(e) {
+                alert("Gagal menyimpan kategori.");
+                setLoading(false);
+            }
         }
 
         function kirimWhatsAppEstimasi() {
@@ -1400,24 +1332,15 @@
             const tbody = document.getElementById('print-items-tbody');
             tbody.innerHTML = '';
 
-            let subtotalCalc = 0;
-            let diskonFound = 0;
-
             if (itemsString && itemsString.includes('x @')) {
                 const parts = itemsString.split(', ');
                 parts.forEach(p => {
-                    if (p.includes('Diskon')) {
-                        const mD = p.match(/Diskon\s\(-Rp\s([0-9.]+)\)/);
-                        if(mD) diskonFound = parseRupiah(mD[1]);
-                        return;
-                    }
                     const matches = p.match(/(.*)\s\((\d+)x\s@([\d.]+)\)/);
                     if (matches) {
                         const name = matches[1];
                         const qty = matches[2];
                         const price = Number(matches[3].replace(/[^0-9]/g, ''));
                         const sub = qty * price;
-                        subtotalCalc += sub;
 
                         const tr = document.createElement('tr');
                         tr.className = "border-b border-slate-100";
@@ -1430,17 +1353,15 @@
                     }
                 });
             } else {
-                subtotalCalc = parseRupiah(itemsString);
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-slate-100";
                 tr.innerHTML = `
                     <td class="p-3 font-bold text-slate-900">${itemsString || '-'}</td>
-                    <td class="p-3 text-right">Rp ${subtotalCalc.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-right">Rp 0</td>
                     <td class="p-3 text-center">1</td>
-                    <td class="p-3 text-right font-semibold">Rp ${subtotalCalc.toLocaleString('id-ID')}</td>`;
+                    <td class="p-3 text-right font-semibold">Rp 0</td>`;
                 tbody.appendChild(tr);
             }
-            return { subtotalCalc, diskonFound };
         }
     
         function cetakNotaStruk(id, isForceLunas) {
@@ -1448,31 +1369,30 @@
             if(!item) return alert("Gagal mencetak: Nota tidak ditemukan.");
             
             const fmt = (val) => "Rp " + Number(val || 0).toLocaleString('id-ID');
-            const totalBayar = Number(item[3] || 0);
+            const finalTotal = Number(item[3] || 0);
             const dpBayar = Number(item[4] || 0);
             const sisaAwal = Number(item[5] || 0);
+            const diskonVal = Number(item[8] || 0);
+            const subtotalBarang = finalTotal + diskonVal;
             
-            const isLunasLangsung = (dpBayar >= totalBayar || sisaAwal === 0) && !isForceLunas;
+            const isLunasLangsung = (dpBayar >= finalTotal || sisaAwal === 0) && !isForceLunas;
             const isLunasMurni = (sisaAwal === 0 || isForceLunas);
 
             document.getElementById('print-cust').innerText = item[1];
             const tglFormatted = new Date(item[7]).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
             document.getElementById('print-tgl').innerText = tglFormatted;
             
-            const parsed = parseItemsToPrintRows(item[2]);
+            parseItemsToPrintRows(item[2]);
             
-            const subtotalVal = parsed.subtotalCalc > 0 ? parsed.subtotalCalc : (totalBayar + parsed.diskonFound);
-            document.getElementById('print-subtotal-val').innerText = fmt(subtotalVal);
-
+            document.getElementById('print-subtotal-barang').innerText = fmt(subtotalBarang);
             const diskonRow = document.getElementById('print-diskon-row');
-            if (parsed.diskonFound > 0) {
+            if (diskonVal > 0) {
                 diskonRow.style.display = 'flex';
-                document.getElementById('print-diskon-val').innerText = "- " + fmt(parsed.diskonFound);
+                document.getElementById('print-diskon').innerText = "- " + fmt(diskonVal);
             } else {
                 diskonRow.style.display = 'none';
             }
-
-            document.getElementById('print-total').innerText = fmt(totalBayar);
+            document.getElementById('print-total').innerText = fmt(finalTotal);
             
             const dpRow = document.getElementById('print-dp-row');
             const sisaRow = document.getElementById('print-sisa-row');
@@ -1495,7 +1415,7 @@
                 dpRow.style.display = 'flex';
                 sisaRow.style.display = 'flex';
 
-                const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (totalBayar - dpBayar);
+                const nominalPelunasan = sisaAwal > 0 ? sisaAwal : (finalTotal - dpBayar);
                 
                 document.getElementById('print-dp-label').innerText = "Uang Muka / DP";
                 document.getElementById('print-dp').innerText = "- " + fmt(dpBayar);
@@ -1535,28 +1455,39 @@
             const tbody = document.getElementById('print-items-tbody');
             tbody.innerHTML = '';
 
-            let subtotalCalc = 0;
+            let subtotalBarang = 0;
             document.querySelectorAll('.item-row').forEach(row => {
-                const n = row.querySelector('.item-name').value;
-                const q = parseRupiah(row.querySelector('.qty').value);
+                const categorySelect = row.querySelector('.item-category');
+                const catName = categorySelect ? categorySelect.value : '';
+                let qtyRaw = row.querySelector('.qty').value;
                 const p = parseRupiah(row.querySelector('.price').value);
 
-                if(n) {
-                    const sub = q * p;
-                    subtotalCalc += sub;
+                let qty = parseRupiah(qtyRaw);
+                if (catName.toLowerCase() === 'spanduk') {
+                    let numVal = parseFloat(qtyRaw.replace(',', '.')) || 0;
+                    if (numVal > 0 && numVal <= 0.5) {
+                        qty = 1;
+                    } else if (numVal > 0) {
+                        qty = Math.ceil(numVal);
+                    }
+                }
+
+                if(catName) {
+                    const sub = qty * p;
+                    subtotalBarang += sub;
                     const tr = document.createElement('tr');
                     tr.className = "border-b border-slate-100";
                     tr.innerHTML = `
-                        <td class="p-3 font-bold text-slate-900">${n}</td>
+                        <td class="p-3 font-bold text-slate-900">${catName}</td>
                         <td class="p-3 text-right">Rp ${p.toLocaleString('id-ID')}</td>
-                        <td class="p-3 text-center">${q}</td>
+                        <td class="p-3 text-center">${qty}</td>
                         <td class="p-3 text-right font-semibold">Rp ${sub.toLocaleString('id-ID')}</td>`;
                     tbody.appendChild(tr);
                 }
             });
 
             const diskonVal = parseRupiah(document.getElementById('inputDiskon').value);
-            const total = parseRupiah(document.getElementById('grandTotal').innerText);
+            const total = Math.max(0, subtotalBarang - diskonVal);
             const dpVal = parseRupiah(document.getElementById('inputDP').value || 0);
             const sisaVal = Math.max(0, total - dpVal);
             const isLunasLangsung = (sisaVal === 0 || dpVal >= total);
@@ -1566,15 +1497,14 @@
             document.getElementById('print-cust').innerText = custName;
             document.getElementById('print-tgl').innerText = new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 
-            document.getElementById('print-subtotal-val').innerText = fmt(subtotalCalc);
+            document.getElementById('print-subtotal-barang').innerText = fmt(subtotalBarang);
             const diskonRow = document.getElementById('print-diskon-row');
             if (diskonVal > 0) {
                 diskonRow.style.display = 'flex';
-                document.getElementById('print-diskon-val').innerText = "- " + fmt(diskonVal);
+                document.getElementById('print-diskon').innerText = "- " + fmt(diskonVal);
             } else {
                 diskonRow.style.display = 'none';
             }
-
             document.getElementById('print-total').innerText = fmt(total);
             
             const dpRow = document.getElementById('print-dp-row');
@@ -1638,20 +1568,19 @@
         function clearPmesananForm() {
             document.getElementById('custName').value = ''; 
             document.getElementById('inputDP').value = '';
-            document.getElementById('inputDiskon').value = '';
+            document.getElementById('inputDiskon').value = '0';
             document.getElementById('persenDP').value = '0.5';
             isManualDP = false; 
             
-            let catOptions = `<option value="">-- Pilih Kategori --</option>`;
-            getCategories().forEach(c => {
-                catOptions += `<option value="${c.name}" data-price="${c.price}">${c.name} (Rp ${Number(c.price).toLocaleString('id-ID')})</option>`;
+            let optionsHtml = '<option value="">-- Pilih Kategori / Manual --</option>';
+            globalKategoriList.forEach(cat => {
+                optionsHtml += `<option value="${cat.nama}" data-harga="${cat.harga}">${cat.nama} (Rp ${Number(cat.harga).toLocaleString('id-ID')})</option>`;
             });
 
             document.getElementById('items-container').innerHTML = `
-                <div class="item-row grid grid-cols-1 md:grid-cols-5 gap-3 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <select class="item-cat-select p-3 rounded-xl border outline-none bg-white text-xs font-semibold" onchange="onItemCategoryChange(this)">${catOptions}</select>
-                    <input type="text" placeholder="Nama Barang" class="item-name p-3 rounded-xl border outline-none md:col-span-1">
-                    <input type="text" placeholder="Qty" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
+                <div class="item-row grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <select class="item-category p-3 rounded-xl border outline-none bg-white" onchange="onCategoryChange(this)">${optionsHtml}</select>
+                    <input type="text" placeholder="Qty / Meter" class="qty p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                     <input type="text" placeholder="Harga" class="price p-3 rounded-xl border outline-none" oninput="formatInputRupiah(this); hitungTotal()">
                     <span class="subtotal-text font-bold text-right text-slate-800">Rp 0</span>
                 </div>`;
@@ -1667,7 +1596,6 @@
             document.getElementById('print-logo-img').src = LOGO_URL; 
             
             buildDropdownSelector();
-            populateAllCategoryDropdowns();
             updateDashboard();
         };
     </script>
